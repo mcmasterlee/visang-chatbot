@@ -191,7 +191,14 @@
       <h1>⚙️ 비상교육 챗봇 관리자</h1>
       <p>교재 자료 등록 현황 및 링크를 이곳에서 관리합니다. 변경 즉시 챗봇에 반영됩니다.</p>
     </div>
-    <a href="index.html" class="back-btn"><i class="fa fa-arrow-left"></i> 챗봇으로 돌아가기</a>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <a href="https://mcmasterlee.github.io/visang-chatbot" class="back-btn"><i class="fa fa-arrow-left"></i> 챗봇으로 돌아가기</a>
+      <button onclick="logout()" style="
+        background:#fee2e2; color:#dc2626; border:1px solid #fca5a5;
+        border-radius:8px; padding:8px 16px; font-size:14px; font-weight:500;
+        font-family:inherit; cursor:pointer; display:flex; align-items:center; gap:6px;
+      "><i class="fa fa-right-from-bracket"></i> 로그아웃</button>
+    </div>
   </div>
 
   <!-- 탭 -->
@@ -363,7 +370,79 @@
 <!-- 토스트 -->
 <div class="toast" id="toast"></div>
 
+<!-- ══ 비밀번호 잠금 화면 ══ -->
+<div id="lockScreen" style="
+  display:none; position:fixed; inset:0; z-index:999;
+  background:linear-gradient(135deg,#4A0E5C 0%,#7B2D8B 50%,#C2185B 100%);
+  align-items:center; justify-content:center;
+">
+  <div style="
+    background:white; border-radius:16px; padding:40px 36px;
+    width:100%; max-width:380px; box-shadow:0 20px 60px rgba(0,0,0,0.3);
+    text-align:center;
+  ">
+    <div style="font-size:48px; margin-bottom:12px;">🔐</div>
+    <h2 style="font-size:20px; font-weight:700; color:#7B2D8B; margin-bottom:6px;">관리자 로그인</h2>
+    <p style="font-size:13px; color:#6b7280; margin-bottom:24px;">비상교육 챗봇 관리자 페이지입니다.<br>비밀번호를 입력해 주세요.</p>
+    <input
+      type="password"
+      id="pwInput"
+      placeholder="비밀번호 입력"
+      onkeydown="if(event.key==='Enter') checkPassword()"
+      style="
+        width:100%; padding:12px 16px; border:2px solid #e5e7eb;
+        border-radius:10px; font-size:15px; outline:none;
+        font-family:inherit; margin-bottom:12px;
+        transition:border-color 0.2s;
+      "
+      onfocus="this.style.borderColor='#7B2D8B'"
+      onblur="this.style.borderColor='#e5e7eb'"
+    />
+    <div id="pwError" style="color:#dc2626; font-size:13px; min-height:20px; margin-bottom:12px;"></div>
+    <button onclick="checkPassword()" style="
+      width:100%; padding:12px; background:#7B2D8B; color:white;
+      border:none; border-radius:10px; font-size:15px; font-weight:600;
+      font-family:inherit; cursor:pointer; transition:background 0.2s;
+    " onmouseover="this.style.background='#5a1f67'" onmouseout="this.style.background='#7B2D8B'">
+      로그인
+    </button>
+  </div>
+</div>
+
 <script>
+// ── 비밀번호 설정 (변경 시 이 값만 수정) ──
+const ADMIN_PASSWORD = 'visang2024!';
+
+// ── 비밀번호 확인 ──
+function checkPassword() {
+  const input = document.getElementById('pwInput').value;
+  const errEl = document.getElementById('pwError');
+  if (input === ADMIN_PASSWORD) {
+    // 세션 저장 (탭 닫으면 초기화)
+    sessionStorage.setItem('admin_auth', 'ok');
+    document.getElementById('lockScreen').style.display = 'none';
+    init();
+  } else {
+    errEl.textContent = '❌ 비밀번호가 올바르지 않습니다.';
+    document.getElementById('pwInput').value = '';
+    document.getElementById('pwInput').focus();
+    setTimeout(() => errEl.textContent = '', 2500);
+  }
+}
+
+// ── 잠금 화면 표시 여부 확인 ──
+function checkAuth() {
+  if (sessionStorage.getItem('admin_auth') === 'ok') {
+    // 이미 인증됨 → 바로 초기화
+    init();
+  } else {
+    // 잠금 화면 표시
+    const ls = document.getElementById('lockScreen');
+    ls.style.display = 'flex';
+    setTimeout(() => document.getElementById('pwInput').focus(), 100);
+  }
+}
+
 // ── 상태 ──
 let allTextbooks = [];
 let allLinks     = [];
@@ -380,6 +459,12 @@ function switchTab(tab) {
 // ── 초기화 ──
 async function init() {
   await Promise.all([loadTextbooks(), loadLinks()]);
+}
+
+// ── 로그아웃 ──
+function logout() {
+  sessionStorage.removeItem('admin_auth');
+  location.reload();
 }
 
 // ── Table API 절대 URL (Netlify 배포 환경에서도 동작) ──
@@ -618,7 +703,8 @@ function showToast(msg, type = '') {
   setTimeout(() => t.classList.remove('show'), 3000);
 }
 
-init();
+// 페이지 로드 시 인증 확인
+checkAuth();
 </script>
 </body>
 </html>
