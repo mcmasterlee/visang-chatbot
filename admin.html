@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>비상교육 챗봇 관리자</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary: #7B2D8B;
+      --primary-dark: #5a1f67;
+      --accent: #E91E8C;
+      --green: #16a34a;
+      --red: #dc2626;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-400: #9ca3af;
+      --gray-600: #4b5563;
+      --gray-800: #1f2937;
+      --shadow: 0 2px 12px rgba(0,0,0,0.1);
+      --radius: 12px;
+    }
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: linear-gradient(135deg, #4A0E5C 0%, #7B2D8B 50%, #C2185B 100%);
+      min-height: 100vh;
+      padding: 24px 16px;
+      color: var(--gray-800);
+    }
+    .container { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+
+    /* ── 헤더 ── */
+    .page-header {
+      background: white;
+      border-radius: var(--radius);
+      padding: 20px 28px;
+      box-shadow: var(--shadow);
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+    }
+    .page-header h1 { font-size: 20px; font-weight: 700; color: var(--primary); }
+    .page-header p { font-size: 13px; color: var(--gray-600); margin-top: 4px; }
+    .back-btn {
+      background: var(--primary); color: white; border: none; border-radius: 8px;
+      padding: 8px 18px; font-size: 14px; cursor: pointer; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .back-btn:hover { background: var(--primary-dark); }
+
+    /* ── 탭 ── */
+    .tab-bar {
+      display: flex; gap: 4px;
+      background: white; border-radius: var(--radius); padding: 6px;
+      box-shadow: var(--shadow);
+    }
+    .tab-btn {
+      flex: 1; padding: 10px; border: none; border-radius: 8px; cursor: pointer;
+      font-size: 14px; font-weight: 500; font-family: inherit;
+      background: transparent; color: var(--gray-600); transition: all 0.2s;
+    }
+    .tab-btn.active { background: var(--primary); color: white; }
+    .tab-btn:hover:not(.active) { background: var(--gray-100); }
+
+    /* ── 패널 ── */
+    .panel { background: white; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+    .panel-header {
+      padding: 16px 24px; border-bottom: 1px solid var(--gray-200);
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+    }
+    .panel-header h2 { font-size: 16px; font-weight: 700; }
+    .panel-body { padding: 20px 24px; }
+
+    /* ── 버튼 ── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border: none; border-radius: 8px; cursor: pointer;
+      font-size: 13px; font-weight: 500; font-family: inherit; transition: all 0.2s;
+    }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-success { background: var(--green); color: white; }
+    .btn-success:hover { filter: brightness(0.9); }
+    .btn-danger { background: var(--red); color: white; }
+    .btn-danger:hover { filter: brightness(0.9); }
+    .btn-ghost { background: var(--gray-100); color: var(--gray-600); border: 1px solid var(--gray-200); }
+    .btn-ghost:hover { background: var(--gray-200); }
+    .btn-sm { padding: 5px 10px; font-size: 12px; }
+
+    /* ── 검색/필터 ── */
+    .filter-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+    .filter-row input, .filter-row select {
+      padding: 8px 12px; border: 1.5px solid var(--gray-200); border-radius: 8px;
+      font-size: 13px; font-family: inherit; outline: none; color: var(--gray-800);
+    }
+    .filter-row input:focus, .filter-row select:focus { border-color: var(--primary); }
+    .filter-row input { flex: 1; min-width: 160px; }
+    .filter-row select { min-width: 120px; }
+
+    /* ── 테이블 ── */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th { background: var(--gray-100); padding: 10px 12px; text-align: left; font-weight: 600; color: var(--gray-600); border-bottom: 2px solid var(--gray-200); white-space: nowrap; }
+    td { padding: 10px 12px; border-bottom: 1px solid var(--gray-200); vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #faf5ff; }
+
+    .badge {
+      display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 600;
+    }
+    .badge-on { background: #dcfce7; color: #15803d; }
+    .badge-off { background: #fee2e2; color: #dc2626; }
+
+    .subject-tag {
+      display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 500;
+    }
+    .tag-수학 { background: #dbeafe; color: #1d4ed8; }
+    .tag-영어 { background: #d1fae5; color: #065f46; }
+    .tag-과학 { background: #fef3c7; color: #92400e; }
+    .tag-사회역사 { background: #ede9fe; color: #5b21b6; }
+    .tag-국어 { background: #fce7f3; color: #9d174d; }
+    .tag-완자공부력 { background: #ffedd5; color: #9a3412; }
+
+    /* ── 모달 ── */
+    .modal-backdrop {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+      z-index: 100; align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      background: white; border-radius: var(--radius); width: 100%; max-width: 520px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden;
+      animation: fadeUp 0.2s ease;
+    }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:none; } }
+    .modal-header {
+      padding: 16px 20px; background: var(--primary); color: white;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .modal-header h3 { font-size: 16px; font-weight: 700; }
+    .modal-close { background: none; border: none; color: white; font-size: 20px; cursor: pointer; line-height: 1; }
+    .modal-body { padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+    .modal-footer { padding: 14px 20px; border-top: 1px solid var(--gray-200); display: flex; justify-content: flex-end; gap: 10px; }
+
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-group label { font-size: 12px; font-weight: 600; color: var(--gray-600); }
+    .form-group input, .form-group select, .form-group textarea {
+      padding: 9px 12px; border: 1.5px solid var(--gray-200); border-radius: 8px;
+      font-size: 14px; font-family: inherit; outline: none; color: var(--gray-800);
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--primary); }
+    .form-group textarea { resize: vertical; min-height: 60px; }
+    .checkbox-row { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+    .checkbox-row input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; }
+    .checkbox-row span { font-size: 14px; }
+
+    /* ── 토스트 ── */
+    .toast {
+      position: fixed; bottom: 24px; right: 24px; z-index: 200;
+      background: var(--gray-800); color: white; padding: 12px 20px; border-radius: 10px;
+      font-size: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      transform: translateY(60px); opacity: 0; transition: all 0.3s ease;
+    }
+    .toast.show { transform: none; opacity: 1; }
+    .toast.success { background: var(--green); }
+    .toast.error { background: var(--red); }
+
+    /* ── 요약 카드 ── */
+    .stat-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+    .stat-card {
+      flex: 1; min-width: 130px; background: var(--gray-100); border-radius: 10px;
+      padding: 14px 16px; text-align: center;
+    }
+    .stat-num { font-size: 28px; font-weight: 700; color: var(--primary); }
+    .stat-label { font-size: 12px; color: var(--gray-600); margin-top: 2px; }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .empty-row td { text-align: center; color: var(--gray-400); padding: 40px; }
+    .loading { text-align: center; color: var(--gray-400); padding: 40px; font-size: 14px; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- 헤더 -->
+  <div class="page-header">
+    <div>
+      <h1>⚙️ 비상교육 챗봇 관리자</h1>
+      <p>교재 자료 등록 현황 및 링크를 이곳에서 관리합니다. 변경 즉시 챗봇에 반영됩니다.</p>
+    </div>
+    <a href="index.html" class="back-btn"><i class="fa fa-arrow-left"></i> 챗봇으로 돌아가기</a>
+  </div>
+
+  <!-- 탭 -->
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('textbooks')">📚 교재 목록</button>
+    <button class="tab-btn" onclick="switchTab('links')">🔗 링크 관리</button>
+  </div>
+
+  <!-- ══ 교재 탭 ══ -->
+  <div id="tab-textbooks" class="tab-content active">
+    <div class="panel">
+      <div class="panel-header">
+        <h2>교재 자료 등록 현황</h2>
+        <button class="btn btn-primary" onclick="openTextbookModal()">
+          <i class="fa fa-plus"></i> 교재 추가
+        </button>
+      </div>
+      <div class="panel-body">
+        <!-- 통계 -->
+        <div class="stat-row" id="statRow">
+          <div class="stat-card"><div class="stat-num" id="statTotal">-</div><div class="stat-label">전체</div></div>
+          <div class="stat-card"><div class="stat-num" id="statReg">-</div><div class="stat-label">등록 완료</div></div>
+          <div class="stat-card"><div class="stat-num" id="statUnreg">-</div><div class="stat-label">미등록</div></div>
+        </div>
+        <!-- 필터 -->
+        <div class="filter-row">
+          <input type="text" id="tbSearch" placeholder="🔍 브랜드·레벨 검색" oninput="renderTextbooks()" />
+          <select id="tbSubject" onchange="renderTextbooks()">
+            <option value="">전체 과목</option>
+            <option>수학</option><option>영어</option><option>과학</option>
+            <option>사회역사</option><option>국어</option><option>완자공부력</option>
+          </select>
+          <select id="tbGrade" onchange="renderTextbooks()">
+            <option value="">전체 학교급</option>
+            <option>고등</option><option>중학</option><option>초등</option>
+          </select>
+          <select id="tbStatus" onchange="renderTextbooks()">
+            <option value="">전체 상태</option>
+            <option value="true">등록 완료</option>
+            <option value="false">미등록</option>
+          </select>
+        </div>
+        <!-- 테이블 -->
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>과목</th><th>학교급</th><th>브랜드</th><th>권·학기</th>
+                <th>상태</th><th>비고</th><th style="width:90px">관리</th>
+              </tr>
+            </thead>
+            <tbody id="tbBody"><tr><td colspan="7" class="loading">불러오는 중...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 링크 탭 ══ -->
+  <div id="tab-links" class="tab-content">
+    <div class="panel">
+      <div class="panel-header">
+        <h2>서비스 링크 관리</h2>
+        <button class="btn btn-primary" onclick="openLinkModal()">
+          <i class="fa fa-plus"></i> 링크 추가
+        </button>
+      </div>
+      <div class="panel-body">
+        <p style="font-size:13px; color:var(--gray-600); margin-bottom:16px;">
+          ⚠️ 링크를 변경하면 챗봇의 AI 안내 메시지에 즉시 반영됩니다. URL은 정확히 입력해 주세요.
+        </p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>식별자</th><th>설명</th><th>URL</th><th>카테고리</th><th style="width:90px">관리</th></tr>
+            </thead>
+            <tbody id="lkBody"><tr><td colspan="5" class="loading">불러오는 중...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- ══ 교재 모달 ══ -->
+<div class="modal-backdrop" id="textbookModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="tbModalTitle">교재 추가</h3>
+      <button class="modal-close" onclick="closeModal('textbookModal')">×</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="tbId" />
+      <div class="form-group">
+        <label>과목 *</label>
+        <select id="tbSubjectInput">
+          <option value="">선택</option>
+          <option>수학</option><option>영어</option><option>과학</option>
+          <option>사회역사</option><option>국어</option><option>완자공부력</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>학교급 *</label>
+        <select id="tbGradeInput">
+          <option value="">선택</option>
+          <option>고등</option><option>중학</option><option>초등</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>브랜드(시리즈명) *</label>
+        <input type="text" id="tbBrandInput" placeholder="예: 완자 기출PICK, 오투, 한끝" />
+      </div>
+      <div class="form-group">
+        <label>권·학기 목록 *</label>
+        <textarea id="tbLevelsInput" placeholder="예: 공통수학 1, 공통수학 2, 대수&#10;또는: 1-1, 1-2, 2-1, 2-2"></textarea>
+      </div>
+      <div class="form-group">
+        <label>비고 (개정 정보 등)</label>
+        <input type="text" id="tbNoteInput" placeholder="예: 15개정, 22개정, 라이트/파워" />
+      </div>
+      <label class="checkbox-row">
+        <input type="checkbox" id="tbRegistered" checked />
+        <span>자료실 등록 완료</span>
+      </label>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('textbookModal')">취소</button>
+      <button class="btn btn-success" onclick="saveTextbook()"><i class="fa fa-save"></i> 저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 링크 모달 ══ -->
+<div class="modal-backdrop" id="linkModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="lkModalTitle">링크 추가</h3>
+      <button class="modal-close" onclick="closeModal('linkModal')">×</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="lkId" />
+      <div class="form-group">
+        <label>식별자 (영문, 영문자·_만 사용) *</label>
+        <input type="text" id="lkKeyInput" placeholder="예: vivasam, book_visang, kakao" />
+      </div>
+      <div class="form-group">
+        <label>설명 *</label>
+        <input type="text" id="lkLabelInput" placeholder="예: 비바샘 비상교재 자료실" />
+      </div>
+      <div class="form-group">
+        <label>URL *</label>
+        <input type="url" id="lkUrlInput" placeholder="https://..." />
+      </div>
+      <div class="form-group">
+        <label>카테고리</label>
+        <select id="lkCategoryInput">
+          <option>비바샘</option><option>비상교재</option><option>스콘</option><option>기타</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('linkModal')">취소</button>
+      <button class="btn btn-success" onclick="saveLink()"><i class="fa fa-save"></i> 저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- 토스트 -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── 상태 ──
+let allTextbooks = [];
+let allLinks     = [];
+
+// ── 탭 전환 ──
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', ['textbooks','links'][i] === tab);
+  });
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+}
+
+// ── 초기화 ──
+async function init() {
+  await Promise.all([loadTextbooks(), loadLinks()]);
+}
+
+// ── Table API 절대 URL (Netlify 배포 환경에서도 동작) ──
+const API_BASE = 'https://www.genspark.ai/api/code_sandbox_light/preview/0b8c60ae-258c-4dee-a4a9-c03cd18e338b';
+
+// ── 교재 로드 ──
+async function loadTextbooks() {
+  try {
+    let all = [], page = 1, limit = 500;
+    while (true) {
+      const res  = await fetch(`${API_BASE}/tables/textbooks?page=${page}&limit=${limit}`);
+      const data = await res.json();
+      all = all.concat(data.data || []);
+      if (all.length >= data.total) break;
+      page++;
+    }
+    allTextbooks = all;
+    updateStats();
+    renderTextbooks();
+  } catch(e) {
+    document.getElementById('tbBody').innerHTML = '<tr><td colspan="7" class="loading">로드 실패: ' + e.message + '</td></tr>';
+  }
+}
+
+// ── 링크 로드 ──
+async function loadLinks() {
+  try {
+    const res  = await fetch(`${API_BASE}/tables/links?limit=200`);
+    const data = await res.json();
+    allLinks   = data.data || [];
+    renderLinks();
+  } catch(e) {
+    document.getElementById('lkBody').innerHTML = '<tr><td colspan="5" class="loading">로드 실패: ' + e.message + '</td></tr>';
+  }
+}
+
+// ── 통계 업데이트 ──
+function updateStats() {
+  document.getElementById('statTotal').textContent = allTextbooks.length;
+  document.getElementById('statReg').textContent   = allTextbooks.filter(t => t.registered).length;
+  document.getElementById('statUnreg').textContent = allTextbooks.filter(t => !t.registered).length;
+}
+
+// ── 교재 렌더링 ──
+function renderTextbooks() {
+  const q       = (document.getElementById('tbSearch').value || '').toLowerCase();
+  const subject = document.getElementById('tbSubject').value;
+  const grade   = document.getElementById('tbGrade').value;
+  const status  = document.getElementById('tbStatus').value;
+
+  const filtered = allTextbooks.filter(t => {
+    if (subject && t.subject !== subject) return false;
+    if (grade   && t.grade   !== grade)   return false;
+    if (status  !== '') {
+      const want = status === 'true';
+      if (Boolean(t.registered) !== want) return false;
+    }
+    if (q) {
+      const hay = ((t.brand||'') + ' ' + (t.levels||'') + ' ' + (t.note||'')).toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+
+  if (filtered.length === 0) {
+    document.getElementById('tbBody').innerHTML = '<tr class="empty-row"><td colspan="7">검색 결과가 없습니다.</td></tr>';
+    return;
+  }
+
+  const subjectKey = s => s ? s.replace(/[\s·]/g,'') : '';
+
+  document.getElementById('tbBody').innerHTML = filtered.map(t => `
+    <tr>
+      <td><span class="subject-tag tag-${subjectKey(t.subject)}">${t.subject||'-'}</span></td>
+      <td>${t.grade||'-'}</td>
+      <td><strong>${t.brand||'-'}</strong></td>
+      <td style="max-width:260px; word-break:break-word; font-size:12px;">${t.levels||'-'}</td>
+      <td><span class="badge ${t.registered ? 'badge-on' : 'badge-off'}">${t.registered ? '등록 완료' : '미등록'}</span></td>
+      <td style="font-size:12px; color:var(--gray-600);">${t.note||''}</td>
+      <td>
+        <button class="btn btn-ghost btn-sm" onclick="editTextbook('${t.id}')"><i class="fa fa-pen"></i></button>
+        <button class="btn btn-danger btn-sm" style="margin-left:4px" onclick="deleteTextbook('${t.id}')"><i class="fa fa-trash"></i></button>
+      </td>
+    </tr>`).join('');
+}
+
+// ── 링크 렌더링 ──
+function renderLinks() {
+  if (allLinks.length === 0) {
+    document.getElementById('lkBody').innerHTML = '<tr class="empty-row"><td colspan="5">링크가 없습니다.</td></tr>';
+    return;
+  }
+  document.getElementById('lkBody').innerHTML = allLinks.map(l => `
+    <tr>
+      <td><code style="background:var(--gray-100);padding:2px 6px;border-radius:4px;font-size:12px;">${l.key||'-'}</code></td>
+      <td>${l.label||'-'}</td>
+      <td style="max-width:300px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+        <a href="${l.url}" target="_blank" style="color:#2563eb; text-decoration:none; font-size:12px;">${l.url||'-'}</a>
+      </td>
+      <td><span class="badge badge-on" style="background:#ede9fe;color:#5b21b6;">${l.category||'-'}</span></td>
+      <td>
+        <button class="btn btn-ghost btn-sm" onclick="editLink('${l.id}')"><i class="fa fa-pen"></i></button>
+        <button class="btn btn-danger btn-sm" style="margin-left:4px" onclick="deleteLink('${l.id}')"><i class="fa fa-trash"></i></button>
+      </td>
+    </tr>`).join('');
+}
+
+// ── 교재 모달 ──
+function openTextbookModal(data) {
+  document.getElementById('tbModalTitle').textContent = data ? '교재 수정' : '교재 추가';
+  document.getElementById('tbId').value            = data?.id || '';
+  document.getElementById('tbSubjectInput').value  = data?.subject || '';
+  document.getElementById('tbGradeInput').value    = data?.grade || '';
+  document.getElementById('tbBrandInput').value    = data?.brand || '';
+  document.getElementById('tbLevelsInput').value   = data?.levels || '';
+  document.getElementById('tbNoteInput').value     = data?.note || '';
+  document.getElementById('tbRegistered').checked  = data ? Boolean(data.registered) : true;
+  document.getElementById('textbookModal').classList.add('open');
+}
+
+function editTextbook(id) {
+  const t = allTextbooks.find(x => x.id === id);
+  if (t) openTextbookModal(t);
+}
+
+async function saveTextbook() {
+  const id       = document.getElementById('tbId').value;
+  const payload  = {
+    subject:    document.getElementById('tbSubjectInput').value.trim(),
+    grade:      document.getElementById('tbGradeInput').value.trim(),
+    brand:      document.getElementById('tbBrandInput').value.trim(),
+    levels:     document.getElementById('tbLevelsInput').value.trim(),
+    note:       document.getElementById('tbNoteInput').value.trim(),
+    registered: document.getElementById('tbRegistered').checked
+  };
+  if (!payload.subject || !payload.grade || !payload.brand || !payload.levels) {
+    showToast('과목, 학교급, 브랜드, 권·학기는 필수입니다.', 'error');
+    return;
+  }
+  try {
+    const method = id ? 'PUT' : 'POST';
+    const url    = id ? `${API_BASE}/tables/textbooks/${id}` : `${API_BASE}/tables/textbooks`;
+    const res    = await fetch(url, { method, headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    if (!res.ok) throw new Error(await res.text());
+    showToast(id ? '교재가 수정되었습니다.' : '교재가 추가되었습니다.', 'success');
+    closeModal('textbookModal');
+    await loadTextbooks();
+  } catch(e) {
+    showToast('저장 실패: ' + e.message, 'error');
+  }
+}
+
+async function deleteTextbook(id) {
+  const t = allTextbooks.find(x => x.id === id);
+  if (!confirm(`"${t?.brand} (${t?.grade})" 교재를 삭제하시겠습니까?`)) return;
+  try {
+    const res = await fetch(`${API_BASE}/tables/textbooks/${id}`, { method: 'DELETE' });
+    if (res.status !== 204 && !res.ok) throw new Error(await res.text());
+    showToast('삭제되었습니다.', 'success');
+    await loadTextbooks();
+  } catch(e) {
+    showToast('삭제 실패: ' + e.message, 'error');
+  }
+}
+
+// ── 링크 모달 ──
+function openLinkModal(data) {
+  document.getElementById('lkModalTitle').textContent  = data ? '링크 수정' : '링크 추가';
+  document.getElementById('lkId').value               = data?.id || '';
+  document.getElementById('lkKeyInput').value         = data?.key || '';
+  document.getElementById('lkLabelInput').value       = data?.label || '';
+  document.getElementById('lkUrlInput').value         = data?.url || '';
+  document.getElementById('lkCategoryInput').value    = data?.category || '기타';
+  document.getElementById('linkModal').classList.add('open');
+}
+
+function editLink(id) {
+  const l = allLinks.find(x => x.id === id);
+  if (l) openLinkModal(l);
+}
+
+async function saveLink() {
+  const id      = document.getElementById('lkId').value;
+  const payload = {
+    key:      document.getElementById('lkKeyInput').value.trim(),
+    label:    document.getElementById('lkLabelInput').value.trim(),
+    url:      document.getElementById('lkUrlInput').value.trim(),
+    category: document.getElementById('lkCategoryInput').value
+  };
+  if (!payload.key || !payload.label || !payload.url) {
+    showToast('식별자, 설명, URL은 필수입니다.', 'error');
+    return;
+  }
+  try {
+    const method = id ? 'PUT' : 'POST';
+    const url    = id ? `${API_BASE}/tables/links/${id}` : `${API_BASE}/tables/links`;
+    const res    = await fetch(url, { method, headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    if (!res.ok) throw new Error(await res.text());
+    showToast(id ? '링크가 수정되었습니다.' : '링크가 추가되었습니다.', 'success');
+    closeModal('linkModal');
+    await loadLinks();
+  } catch(e) {
+    showToast('저장 실패: ' + e.message, 'error');
+  }
+}
+
+async function deleteLink(id) {
+  const l = allLinks.find(x => x.id === id);
+  if (!confirm(`"${l?.label}" 링크를 삭제하시겠습니까?`)) return;
+  try {
+    const res = await fetch(`${API_BASE}/tables/links/${id}`, { method: 'DELETE' });
+    if (res.status !== 204 && !res.ok) throw new Error(await res.text());
+    showToast('삭제되었습니다.', 'success');
+    await loadLinks();
+  } catch(e) {
+    showToast('삭제 실패: ' + e.message, 'error');
+  }
+}
+
+// ── 공통 ──
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+// 모달 외부 클릭 시 닫기
+document.querySelectorAll('.modal-backdrop').forEach(bd => {
+  bd.addEventListener('click', e => { if (e.target === bd) bd.classList.remove('open'); });
+});
+
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + type;
+  void t.offsetWidth;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+init();
+</script>
+</body>
+</html>
