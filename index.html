@@ -440,14 +440,7 @@
 const GEMINI_API_KEY = 'AIzaSyBnh0n30db_pOi3WEbrd4fSJierguuHtHI';
 // 429 시 순서대로 폴백 시도 (동일 키라도 모델별 쿼터 버킷이 다름)
 const GEMINI_MODELS = [
-  'gemini-2.5-flash',
-  'gemini-2.5-flash-lite',
-  'gemini-2.0-flash-lite',
-  'gemini-2.0-flash-lite-001',
-  'gemini-2.0-flash',
-  'gemini-2.0-flash-001',
-  'gemini-flash-latest',
-  'gemini-flash-lite-latest'
+  'gemini-2.5-flash'
 ];
 const GEMINI_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
 // 429 발생 시 자동 재시도 설정
