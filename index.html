@@ -426,28 +426,19 @@
   <!-- 안내 문구 -->
   <div class="notice-bar">
     <i class="fa fa-info-circle"></i>
-    본 챗봇은 AI가 답변을 생성합니다. 1회의 답변 생성에 1분 가량의 시간이 소요되니 이용에 참고와 양해 부탁드립니다. (무료 API 활용 챗봇)
+    본 챗봇은 AI가 답변을 생성합니다. 더 빠른 처리가 필요하신 경우 카카오 채널 (<a href="https://pf.kakao.com/_nYdwxj" target="_blank" style="color:#0369a1;font-weight:600;">스콘 고객센터</a>)로 문의해 주세요.
   </div>
 
 </div>
 
-<footer>© 2026 Tai Wook Lee. 비상교육 · 교강사 지원 챗봇 · Powered by Gemini AI</footer>
+<footer>© 2025 비상교육 · 교강사 지원 챗봇 · Powered by Gemini AI</footer>
 
 <script>
 // ═══════════════════════════════════════════
 //  설정
 // ═══════════════════════════════════════════
-const GEMINI_API_KEY = 'AIzaSyCkUecxEqRYwQqR--phR1DGlXQDpbgh-2Y';
-// 429 시 순서대로 폴백 시도 (동일 키라도 모델별 쿼터 버킷이 다름)
-const GEMINI_MODELS = [
-  'gemini-2.0-flash',
-  'gemini-2.0-flash-lite',
-  'gemini-1.5-flash'
-];
-const GEMINI_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
-// 429 발생 시 자동 재시도 설정
-const RETRY_DELAYS_MS = [5000, 15000, 30000]; // 5초, 15초, 30초 후 재시도
-const sleep = ms => new Promise(r => setTimeout(r, ms));
+// API 키는 Vercel 서버(api/chat.js)에서만 사용 — 여기에는 키 없음 ✅
+const API_CHAT_ENDPOINT = '/api/chat'; // Vercel 서버리스 함수 엔드포인트
 
 // ═══════════════════════════════════════════
 //  시스템 프롬프트 (비상교육 CS 봇)
@@ -863,11 +854,7 @@ async function callGemini(userText, imgB64, imgType) {
   if (imgB64)   userParts.push({ inline_data: { mime_type: imgType, data: imgB64 } });
   if (userParts.length === 0) userParts.push({ text: '(이미지가 첨부되었습니다)' });
 
-  // 대화 이력 구성:
-  // 1) 시스템 프롬프트 (역할·정보·규칙) + DB 동적 교재 목록 + DB 링크
-  // 2) Few-shot 예시 (정확한 형식·내용 강제)
-  // 3) 실제 대화 이력
-  // 4) 현재 사용자 질문
+  // 시스템 프롬프트 + DB 동적 교재 목록 + DB 링크
   const dynamicCatalog = buildDynamicCatalog();
   const dynamicLinks   = buildDynamicLinks();
   const fullPrompt     = SYSTEM_PROMPT
@@ -882,77 +869,32 @@ async function callGemini(userText, imgB64, imgType) {
     { role: 'user', parts: userParts }
   ];
 
-  const body = {
-    contents,
-    generationConfig: {
-      temperature: 0.4,
-      maxOutputTokens: 3000,
-      topP: 0.85
-    }
-  };
-
-  // 모델 폴백 + 429 자동 재시도
-  let lastError = null;
-
-  for (const model of GEMINI_MODELS) {
-    const url = `${GEMINI_BASE}/${model}:generateContent?key=${GEMINI_API_KEY}`;
-
-    for (let attempt = 0; attempt <= RETRY_DELAYS_MS.length; attempt++) {
-      try {
-        if (attempt > 0) {
-          const waitMs = RETRY_DELAYS_MS[attempt - 1];
-          console.log(`[Gemini] ${model} 재시도 ${attempt}회 (${waitMs/1000}초 후)...`);
-          updateTypingMsg(`잠시만 기다려 주세요... (${waitMs/1000}초 후 재시도 중)`);
-          await sleep(waitMs);
-          updateTypingMsg(null);
-        } else {
-          console.log(`[Gemini] 모델 시도: ${model}`);
-        }
-
-        const res = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body)
-        });
-
-        if (res.status === 429) {
-          const errData = await res.json().catch(() => ({}));
-          const msg = errData?.error?.message || '429 Too Many Requests';
-          console.warn(`[Gemini] ${model} 429 (시도 ${attempt+1}): ${msg.substring(0,80)}`);
-          lastError = new Error(`429: ${msg}`);
-          // 재시도 횟수가 남아 있으면 같은 모델로 재시도
-          if (attempt < RETRY_DELAYS_MS.length) continue;
-          // 재시도 소진 → 다음 모델로
-          break;
-        }
-
-        if (!res.ok) {
-          const errData = await res.json().catch(() => ({}));
-          const msg = errData?.error?.message || res.statusText;
-          console.warn(`[Gemini] ${model} 실패 (${res.status}): ${msg.substring(0,80)}`);
-          lastError = new Error(`${model}: ${res.status} ${msg}`);
-          break; // 다른 오류는 재시도 없이 다음 모델로
-        }
-
-        const data = await res.json();
-        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (!text) {
-          console.warn(`[Gemini] ${model} 응답 텍스트 없음`, data);
-          lastError = new Error(`${model}: 응답 텍스트 없음`);
-          break;
-        }
-        console.log(`[Gemini] ${model} 성공 ✅`);
-        return text;
-
-      } catch (fetchErr) {
-        console.warn(`[Gemini] ${model} fetch 오류:`, fetchErr);
-        lastError = fetchErr;
-        break;
+  // ✅ Vercel 서버 함수로 전송 (API 키는 서버에서만 사용)
+  const res = await fetch(API_CHAT_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents,
+      generationConfig: {
+        temperature: 0.4,
+        maxOutputTokens: 3000,
+        topP: 0.85
       }
-    }
+    })
+  });
+
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    const msg = errData?.error || res.statusText;
+    console.warn(`[API] 오류 (${res.status}):`, msg);
+    throw new Error(res.status === 429 ? '429: ' + msg : msg);
   }
 
-  throw lastError || new Error('모든 모델 시도 실패');
+  const data = await res.json();
+  if (!data.text) throw new Error('응답 텍스트 없음');
+
+  console.log(`[API] 성공 ✅ (모델: ${data.model})`);
+  return data.text;
 }
 
 // ═══════════════════════════════════════════
