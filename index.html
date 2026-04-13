@@ -7,275 +7,1070 @@
   <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" />
   <style>
-    /* ── 기존의 고퀄리티 디자인 CSS 그대로 복구 ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     :root {
-      --primary: #1a56db; --primary-light: #e8f0fe; --primary-dark: #1240a8;
-      --accent: #ff6b35; --success: #16a34a; --bg: #f4f6fb; --white: #ffffff;
-      --gray-100: #f3f4f6; --gray-200: #e5e7eb; --gray-400: #9ca3af;
-      --gray-600: #4b5563; --gray-800: #1f2937; --bot-bg: #f0f4ff;
-      --user-bg: #1a56db; --shadow: 0 4px 24px rgba(26,86,219,0.10);
-      --radius: 16px; --radius-sm: 8px;
+      --primary: #1a56db;
+      --primary-light: #e8f0fe;
+      --primary-dark: #1240a8;
+      --accent: #ff6b35;
+      --success: #16a34a;
+      --bg: #f4f6fb;
+      --white: #ffffff;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-400: #9ca3af;
+      --gray-600: #4b5563;
+      --gray-800: #1f2937;
+      --bot-bg: #f0f4ff;
+      --user-bg: #1a56db;
+      --shadow: 0 4px 24px rgba(26,86,219,0.10);
+      --radius: 16px;
+      --radius-sm: 8px;
     }
-    body { font-family: 'Pretendard', sans-serif; background: var(--bg); color: var(--gray-800); min-height: 100vh; display: flex; flex-direction: column; }
-    header { background: linear-gradient(135deg, #1240a8 0%, #1a56db 60%, #2563eb 100%); color: white; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 12px rgba(18,64,168,0.20); position: sticky; top: 0; z-index: 100; }
+
+    body {
+      font-family: 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
+      background: var(--bg);
+      color: var(--gray-800);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(135deg, #1240a8 0%, #1a56db 60%, #2563eb 100%);
+      color: white;
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 12px rgba(18,64,168,0.20);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
     .header-left { display: flex; align-items: center; gap: 12px; }
-    .header-logo { width: 38px; height: 38px; background: rgba(255,255,255,0.18); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .header-logo {
+      width: 38px; height: 38px;
+      background: rgba(255,255,255,0.18);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+    }
     .header-title { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; }
-    .header-badge { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); border-radius: 20px; padding: 4px 12px; font-size: 12px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+    .header-sub { font-size: 12px; opacity: 0.75; margin-top: 1px; }
+    .header-badge {
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 500;
+      display: flex; align-items: center; gap: 6px;
+    }
     .badge-dot { width: 7px; height: 7px; background: #4ade80; border-radius: 50%; animation: pulse 2s infinite; }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
-    .app-container { flex: 1; max-width: 820px; width: 100%; margin: 24px auto; padding: 0 16px; display: flex; flex-direction: column; gap: 16px; }
-    .info-banner { background: white; border-radius: var(--radius); padding: 18px 22px; box-shadow: var(--shadow); display: flex; align-items: flex-start; gap: 14px; border-left: 4px solid var(--primary); }
+    /* ── Layout ── */
+    .app-container {
+      flex: 1;
+      max-width: 820px;
+      width: 100%;
+      margin: 24px auto;
+      padding: 0 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* ── Info Banner ── */
+    .info-banner {
+      background: white;
+      border-radius: var(--radius);
+      padding: 18px 22px;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      border-left: 4px solid var(--primary);
+    }
     .info-icon { font-size: 22px; margin-top: 1px; }
     .info-text h3 { font-size: 15px; font-weight: 600; margin-bottom: 4px; color: var(--primary); }
     .info-text p { font-size: 13px; color: var(--gray-600); line-height: 1.6; }
     .service-tags { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
-    .service-tag { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: default; }
+    .service-tag {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: default;
+    }
     .tag-vivasam { background: #e0f2fe; color: #0369a1; }
     .tag-book { background: #f0fdf4; color: #15803d; }
     .tag-sconn { background: #fff7ed; color: #c2410c; }
 
-    .chat-window { background: white; border-radius: var(--radius); box-shadow: var(--shadow); display: flex; flex-direction: column; height: 550px; overflow: hidden; }
-    .chat-messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 16px; scroll-behavior: smooth; }
+    /* ── Chat Window ── */
+    .chat-window {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      height: 520px;
+      overflow: hidden;
+    }
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      scroll-behavior: smooth;
+    }
+    .chat-messages::-webkit-scrollbar { width: 4px; }
+    .chat-messages::-webkit-scrollbar-track { background: transparent; }
+    .chat-messages::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 2px; }
+
+    /* ── Messages ── */
     .msg-row { display: flex; gap: 10px; animation: fadeIn 0.3s ease; }
     @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
     .msg-row.user { flex-direction: row-reverse; }
-    .msg-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+
+    .msg-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0; margin-top: 2px;
+    }
     .bot-avatar { background: linear-gradient(135deg, #1a56db, #2563eb); color: white; }
     .user-avatar { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; }
+
     .msg-content { max-width: 75%; display: flex; flex-direction: column; gap: 4px; }
     .msg-row.user .msg-content { align-items: flex-end; }
-    .msg-bubble { padding: 12px 16px; border-radius: var(--radius); font-size: 14px; line-height: 1.7; word-break: break-word; }
-    .bot-bubble { background: var(--bot-bg); color: var(--gray-800); border-bottom-left-radius: 4px; }
-    .user-bubble { background: var(--user-bg); color: white; border-bottom-right-radius: 4px; }
-    .msg-time { font-size: 10px; color: var(--gray-400); }
-    .msg-image { max-width: 200px; border-radius: 10px; margin-top: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
 
+    .msg-name { font-size: 11px; color: var(--gray-400); font-weight: 500; }
+
+    .msg-bubble {
+      padding: 12px 16px;
+      border-radius: var(--radius);
+      font-size: 14px;
+      line-height: 1.7;
+      word-break: break-word;
+    }
+    .bot-bubble {
+      background: var(--bot-bg);
+      color: var(--gray-800);
+      border-bottom-left-radius: 4px;
+    }
+    .user-bubble {
+      background: var(--user-bg);
+      color: white;
+      border-bottom-right-radius: 4px;
+    }
+    .msg-time { font-size: 10px; color: var(--gray-400); }
+
+    /* 이미지 미리보기 */
+    .msg-image {
+      max-width: 200px;
+      border-radius: 10px;
+      margin-top: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    }
+
+    /* 타이핑 인디케이터 */
     .typing-indicator { display: flex; align-items: center; gap: 6px; padding: 12px 16px; }
-    .typing-dot { width: 8px; height: 8px; background: var(--primary); border-radius: 50%; opacity: 0.4; animation: typing 1.2s ease-in-out infinite; }
+    .typing-dot {
+      width: 8px; height: 8px; background: var(--primary);
+      border-radius: 50%; opacity: 0.4;
+      animation: typing 1.2s ease-in-out infinite;
+    }
     .typing-dot:nth-child(2) { animation-delay: 0.2s; }
     .typing-dot:nth-child(3) { animation-delay: 0.4s; }
     @keyframes typing { 0%,80%,100%{opacity:0.4;transform:scale(1)} 40%{opacity:1;transform:scale(1.2)} }
 
-    .quick-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-    .quick-btn { background: white; border: 1.5px solid var(--primary); color: var(--primary); border-radius: 20px; padding: 5px 14px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+    /* 빠른 질문 버튼 */
+    .quick-btns {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;
+    }
+    .quick-btn {
+      background: white;
+      border: 1.5px solid var(--primary);
+      color: var(--primary);
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
     .quick-btn:hover { background: var(--primary); color: white; }
 
-    .chat-input-area { border-top: 1px solid var(--gray-200); padding: 14px 16px; background: white; }
-    .image-preview-row { display: none; align-items: center; gap: 10px; margin-bottom: 10px; padding: 8px 12px; background: var(--gray-100); border-radius: 10px; }
+    /* ── Input Area ── */
+    .chat-input-area {
+      border-top: 1px solid var(--gray-200);
+      padding: 14px 16px;
+      background: white;
+    }
+    .image-preview-row {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      padding: 8px 12px;
+      background: var(--gray-100);
+      border-radius: 10px;
+    }
     .image-preview-row.show { display: flex; }
-    .preview-thumb { width: 50px; height: 50px; object-fit: cover; border-radius: 6px; }
-    
-    .input-row { display: flex; gap: 10px; align-items: flex-end; }
-    .icon-btn { width: 36px; height: 36px; border: 1.5px solid #2563EB; background: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #2563EB; transition: all 0.2s; }
-    .msg-input { flex: 1; border: 1.5px solid var(--gray-200); border-radius: 12px; padding: 10px 14px; font-size: 14px; outline: none; min-height: 44px; max-height: 120px; }
-    .send-btn { width: 44px; height: 44px; background: var(--primary); color: white; border: none; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; }
-    .notice-bar { background: #fff8e1; border: 1px solid #ffd54f; border-radius: 10px; padding: 10px 16px; font-size: 12px; color: #795548; display: flex; gap: 8px; align-items: center; margin-top: 10px; }
-    footer { text-align: center; padding: 16px; font-size: 12px; color: var(--gray-400); }
+    .preview-thumb {
+      width: 50px; height: 50px; object-fit: cover;
+      border-radius: 6px; border: 1px solid var(--gray-200);
+    }
+    .preview-name { font-size: 12px; color: var(--gray-600); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .remove-img {
+      background: none; border: none; cursor: pointer;
+      color: var(--gray-400); font-size: 16px; padding: 2px;
+    }
+    .remove-img:hover { color: #ef4444; }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+    }
+    .input-actions {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+      margin-bottom: 4px;
+    }
+    .icon-btn {
+      width: 36px; height: 36px;
+      border: 1.5px solid #2563EB;
+      background: white;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      color: #2563EB;
+      transition: all 0.2s;
+      font-size: 15px;
+    }
+    .icon-btn:hover { border-color: #1d4ed8; color: white; background: #2563EB; }
+
+    .msg-input {
+      flex: 1;
+      border: 1.5px solid var(--gray-200);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 14px;
+      font-family: inherit;
+      resize: none;
+      outline: none;
+      line-height: 1.5;
+      min-height: 44px;
+      max-height: 120px;
+      transition: border-color 0.2s;
+      color: var(--gray-800);
+    }
+    .msg-input:focus { border-color: var(--primary); }
+    .msg-input::placeholder { color: var(--gray-400); }
+
+    .send-btn {
+      width: 44px; height: 44px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .send-btn:hover { background: var(--primary-dark); transform: scale(1.05); }
+    .send-btn:disabled { background: var(--gray-200); color: var(--gray-400); cursor: not-allowed; transform: none; }
     #fileInput { display: none; }
+
+    /* ── Notice ── */
+    .notice-bar {
+      background: #fff8e1;
+      border: 1px solid #ffd54f;
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-size: 12px;
+      color: #795548;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 16px;
+      font-size: 12px;
+      color: var(--gray-400);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .app-container { margin: 12px auto; }
+      .chat-window { height: calc(100vh - 180px); }
+      .header-sub { display: none; }
+      .info-banner { padding: 14px 16px; }
+      .msg-content { max-width: 85%; }
+    }
   </style>
 </head>
 <body>
 
+<!-- ── HEADER ── -->
 <header>
   <div class="header-left">
     <div class="header-logo">📚</div>
     <div>
       <div class="header-title">비상교육 교강사 지원 챗봇</div>
+      <div class="header-sub">교사용 자료 · 이북(e-Book) · 사이트 문의 안내</div>
     </div>
   </div>
   <div style="display:flex; align-items:center; gap:10px;">
-    <a href="admin.html" style="background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.35); border-radius:8px; padding:5px 11px; color:white; text-decoration:none; font-size:12px; font-weight:500;">
+    <a href="admin.html" title="관리자 페이지" style="
+      background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.35);
+      border-radius:8px; padding:5px 11px; color:white; text-decoration:none;
+      font-size:12px; font-weight:500; display:flex; align-items:center; gap:5px;
+      transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.32)'"
+      onmouseout="this.style.background='rgba(255,255,255,0.2)'">
       <i class="fa fa-gear"></i> 관리자
     </a>
-    <div class="header-badge"><div class="badge-dot"></div>AI 응답 중</div>
+    <div class="header-badge">
+      <div class="badge-dot"></div>
+      AI 응답 중
+    </div>
   </div>
 </header>
 
+<!-- ── MAIN ── -->
 <div class="app-container">
+
+  <!-- 서비스 안내 배너 -->
   <div class="info-banner">
     <div class="info-icon">💬</div>
     <div class="info-text">
       <h3>안녕하세요! 비상교육 교강사 지원 챗봇입니다.</h3>
-      <p>교사용 자료, e-Book, 사이트 이용 관련 문의에 답변드립니다.</p>
+      <p>교사용 자료, e-Book, 사이트 이용 관련 문의에 최대한 빠르고 정확하게 답변드리겠습니다.<br>아래 서비스 중 해당하는 내용으로 질문해 주세요.</p>
       <div class="service-tags">
-        <span class="service-tag tag-vivasam">📖 비바샘 (학교용)</span>
-        <span class="service-tag tag-book">🏫 비상교재 (학원용)</span>
-        <span class="service-tag tag-sconn">📱 스콘 (e-Book)</span>
+        <span class="service-tag tag-vivasam">📖 비바샘 (학교 교사용)</span>
+        <span class="service-tag tag-book">🏫 비상교재 (학원 교사용)</span>
+        <span class="service-tag tag-sconn">📱 스콘 (e-Book 플랫폼)</span>
       </div>
     </div>
   </div>
 
+  <!-- 채팅 창 -->
   <div class="chat-window">
     <div class="chat-messages" id="chatMessages">
+      <!-- 초기 봇 메시지 -->
       <div class="msg-row">
         <div class="msg-avatar bot-avatar"><i class="fa fa-robot"></i></div>
         <div class="msg-content">
-          <div class="msg-bubble bot-bubble">안녕하세요, 선생님! 무엇을 도와드릴까요?<br>아래 버튼을 누르거나 질문을 입력해 주세요.</div>
+          <span class="msg-name">비상교육 AI 상담봇</span>
+          <div class="msg-bubble bot-bubble">
+            안녕하세요, 선생님! 😊<br><br>
+            비상교육 교강사 지원 챗봇입니다. 불편하신 점이 있으셔서 문의주셨을 텐데, 최대한 빠르게 해결해 드리겠습니다.<br><br>
+            아래 자주 묻는 질문을 선택하시거나, 직접 내용을 입력해 주세요.
+          </div>
           <div class="quick-btns">
             <button class="quick-btn" onclick="sendQuick('비바샘 교사용 PDF 자료는 어떻게 받나요?')">📄 교사용 PDF 자료</button>
             <button class="quick-btn" onclick="sendQuick('스콘 e-Book 신청 방법이 어떻게 되나요?')">📱 스콘 e-Book 신청</button>
             <button class="quick-btn" onclick="sendQuick('스콘 로그인이 안 돼요')">🔒 스콘 로그인 오류</button>
+            <button class="quick-btn" onclick="sendQuick('비상교재 학원 선생님 자료 PDF를 받고 싶어요')">🏫 학원 교재 자료</button>
           </div>
+          <span class="msg-time" id="initTime"></span>
         </div>
       </div>
     </div>
 
+    <!-- 입력 영역 -->
     <div class="chat-input-area">
+      <!-- 이미지 미리보기 -->
       <div class="image-preview-row" id="imagePreviewRow">
-        <img class="preview-thumb" id="previewThumb" src="" />
-        <span id="previewName" style="font-size:12px; flex:1"></span>
-        <button onclick="removeImage()" style="border:none; background:none; cursor:pointer; color:#ef4444"><i class="fa fa-times"></i></button>
+        <img class="preview-thumb" id="previewThumb" src="" alt="첨부 이미지" />
+        <span class="preview-name" id="previewName"></span>
+        <button class="remove-img" onclick="removeImage()" title="이미지 제거"><i class="fa fa-times"></i></button>
       </div>
+
       <div class="input-row">
-        <button class="icon-btn" onclick="document.getElementById('fileInput').click()"><i class="fa fa-image"></i></button>
-        <textarea class="msg-input" id="msgInput" placeholder="문의 내용을 입력하세요..." rows="1" onkeydown="handleKey(event)"></textarea>
-        <button class="send-btn" id="sendBtn" onclick="sendMessage()"><i class="fa fa-paper-plane"></i></button>
+        <div class="input-actions">
+          <button class="icon-btn" onclick="document.getElementById('fileInput').click()" title="이미지 첨부">
+            <i class="fa fa-image"></i>
+          </button>
+        </div>
+        <textarea
+          class="msg-input"
+          id="msgInput"
+          placeholder="문의 내용을 입력하세요 (이미지도 첨부 가능)"
+          rows="1"
+          onkeydown="handleKey(event)"
+          oninput="autoResize(this)"
+        ></textarea>
+        <button class="send-btn" id="sendBtn" onclick="sendMessage()" title="전송">
+          <i class="fa fa-paper-plane"></i>
+        </button>
       </div>
       <input type="file" id="fileInput" accept="image/*" onchange="handleImageSelect(event)" />
     </div>
   </div>
-  <div class="notice-bar"><i class="fa fa-info-circle"></i> 본 챗봇은 AI가 답변을 생성합니다. 정확한 기술 지원은 카카오 채널을 이용해 주세요.</div>
+
+  <!-- 안내 문구 -->
+  <div class="notice-bar">
+    <i class="fa fa-info-circle"></i>
+    본 챗봇은 AI가 답변을 생성합니다. 더 빠른 처리가 필요하신 경우 카카오 채널 (<a href="https://pf.kakao.com/_nYdwxj" target="_blank" style="color:#0369a1;font-weight:600;">스콘 고객센터</a>)로 문의해 주세요.
+  </div>
+
 </div>
 
-<footer>© 2025 비상교육 · Powered by Gemini AI</footer>
+<footer>© 2025 비상교육 · 교강사 지원 챗봇 · Powered by Gemini AI</footer>
 
 <script>
 // ═══════════════════════════════════════════
-//  설정 및 보안 (리퍼러 제한 대응)
+//  설정
 // ═══════════════════════════════════════════
-const GEMINI_API_KEY = 'AIzaSyASxJIuWmIV6od9ueLlr3TZBjPe7KAbXXo';
-const API_BASE = 'https://www.genspark.ai/api/code_sandbox_light/preview/0b8c60ae-258c-4dee-a4a9-c03cd18e338b';
+const GEMINI_API_KEY = 'AIzaSyCkUecxEqRYwQqR--phR1DGlXQDpbgh-2Y';
+// 429 시 순서대로 폴백 시도 (동일 키라도 모델별 쿼터 버킷이 다름)
+const GEMINI_MODELS = [
+  'gemini-2.0-flash',
+  'gemini-2.0-flash-lite',
+  'gemini-1.5-flash'
+];
+const GEMINI_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
+// 429 발생 시 자동 재시도 설정
+const RETRY_DELAYS_MS = [5000, 15000, 30000]; // 5초, 15초, 30초 후 재시도
+const sleep = ms => new Promise(r => setTimeout(r, ms));
 
+// ═══════════════════════════════════════════
+//  시스템 프롬프트 (비상교육 CS 봇)
+// ═══════════════════════════════════════════
+const SYSTEM_PROMPT = [
+  "당신은 비상교육의 교강사 전용 AI 상담 챗봇입니다.",
+  "반드시 한국어로만 답변하고, 정중하고 따뜻한 말투를 사용하세요.",
+  "비상교육의 세 가지 서비스에 대한 문의에 아래의 정확한 정보를 기반으로 답변합니다.",
+  "",
+  "───────────────────────────────",
+  "【서비스 1】 비바샘 (vivasam.com) — 학교 교사 전용",
+  "───────────────────────────────",
+  "▶ 교사용 PDF 자료 받는 방법:",
+  "  1. 비바샘 사이트(https://www.vivasam.com)에 로그인",
+  "  2. 비상교재 자료실(https://v.vivasam.com/library/main.do)에서 원하는 교재 검색 후 다운로드",
+  "  ※ 반드시 교사 인증이 완료된 상태여야 다운로드 가능",
+  "  ※ '상단 메뉴에서'라는 표현은 절대 사용하지 말 것 — 비바샘 사이트에서 비상교재 자료실은 상단 메뉴에 없음",
+  "",
+  "▶ 비바샘 e-Book 신청 방법:",
+  "  1. 비바샘(https://www.vivasam.com)에 로그인",
+  "  2. e-Book 신청 페이지(https://v.vivasam.com/library/ebookApply.do) 접속 후 신청",
+  "  3. 신청 완료 후 스콘(sconn.io) 또는 '스콘 for Teacher' 앱에서 열람",
+  "  ※ 반드시 교사 인증이 완료된 상태여야 신청 가능",
+  "",
+  "───────────────────────────────",
+  "【서비스 2】 비상교재 학원선생님 (book.visang.com/main/teacher) — 학원 강사 전용",
+  "───────────────────────────────",
+  "▶ 학원 강사용 PDF 자료 받는 방법:",
+  "  1. 비상교재 학원선생님 사이트(https://book.visang.com/main/teacher) 로그인",
+  "  2. 자료실 > 교재 자료실에서 원하는 교재 검색",
+  "  3. 교재 페이지에서 원하는 자료 확인 후 다운로드",
+  "  ※ 반드시 학원 강사 인증이 완료된 상태여야 다운로드 가능",
+  "  ※ '상단 메뉴에서'라는 표현은 절대 사용하지 말 것",
+  "",
+  "▶ 학원 강사 e-Book(스콘) 신청 방법:",
+  "  1. 스콘 북카페(https://sconn.io) 접속 후 회원가입 (가입 이메일 계정 반드시 기억)",
+  "  2. 공도비 카페(https://cafe.naver.com/gongdovi) 가입",
+  "  3. 교재 e-Book 요청 게시판(https://cafe.naver.com/f-e/cafes/30376033/menus/166)에",
+  "     교재 사용 인증 또는 구매 인증 게시글 작성",
+  "  4. 요청서 작성: https://script.google.com/macros/s/AKfycby31PXUscA0hRAQBYAKxYZXZr1mHyOPiMlz0LbO2Z6KQmUbSpqAHNEsIqA5VXl47P8Beg/exec",
+  "  5. 자료 전달 후 스콘 북카페 웹페이지 또는 '스콘 for Teacher' 앱에서 열람",
+  "  ※ 더 자세한 내용: SCONN e-Book 요청 방법 안내 https://naver.me/5l2ZDFfL",
+  "",
+  "───────────────────────────────",
+  "【서비스 3】 스콘 (sconn.io) — e-Book 전용 플랫폼 (비바샘·비상교재 공통)",
+  "───────────────────────────────",
+  "▶ 앱 설치: 구글플레이 또는 앱스토어에서 '스콘 for Teacher' 검색 후 설치",
+  "▶ 웹 열람: PC 크롬 브라우저에서 https://sconn.io 접속",
+  "▶ 기기 등록: 최대 2대까지 등록 가능 (초과 시 기존 기기 해제 후 재등록)",
+  "",
+  "▶ 스콘 로그인 문제 해결 순서:",
+  "  1. 스콘 사이트 또는 앱에서 비밀번호 재설정 시도",
+  "  2. '교강사 인증 필요' 메시지가 뜨는 경우:",
+  "     → 아직 자료가 제공되지 않은 상태일 수 있음",
+  "     → 자료 제공 시 스콘에서 카카오톡 메시지로 안내",
+  "     → 요청일 기준 2~3 영업일(주말·공휴일 제외) 대기 후 미수신 시",
+  "        PC 크롬 > 스콘 북카페(https://sconn.io) > 마이페이지 > 결제내역 확인",
+  "  3. 위 방법으로도 해결 안 될 경우:",
+  "     → 스콘 고객센터 카카오 채널(https://pf.kakao.com/_nYdwxj)로 문의",
+  "",
+  "───────────────────────────────",
+  "【교재 자료 등록 현황】 — DB에서 동적 로드됨",
+  "───────────────────────────────",
+  "※ 아래는 비바샘·비상교재 학원선생님 사이트에 동일하게 등록된 최신 교사용 자료 현황입니다.",
+  "※ 선생님이 특정 교재의 자료 여부를 물으면 아래 목록을 기준으로 정확히 안내하세요.",
+  "※ 목록에 없는 교재는 반드시 '현재 등록되어 있지 않다'고 정직하게 안내하세요.",
+  "※ 절대로 모르는 교재를 '있다'고 하거나 스콘 고객센터로 연결하지 마세요.",
+  "",
+  "───────────────────────────────",
+  "【답변 규칙】",
+  "───────────────────────────────",
+  "- 항상 정중하고 따뜻한 말투로, 선생님의 불편함에 공감하는 문장으로 시작하세요.",
+  "  예: '많이 불편하셨겠습니다, 선생님.', '답답하셨을 텐데 안내해 드릴게요.'",
+  "  ※ '안녕하세요' 같은 단순 인사로 시작하지 마세요.",
+  "- 질문에서 서비스를 정확히 파악하세요:",
+  "  · 비바샘 → 학교 교사용",
+  "  · 비상교재 학원선생님 → 학원 강사용",
+  "  · 스콘 → e-Book 관련 (어느 플랫폼이든 공통)",
+  "- 서비스가 명확하지 않으면 반드시 먼저 확인하세요:",
+  "  '학교 선생님(비바샘)이신지, 학원 선생님(비상교재)이신지 여쭤봐도 될까요?'",
+  "- 특정 교재의 자료 등록 여부를 물을 때:",
+  "  · 위 목록에 있는 교재 → 등록되어 있다고 안내하고 자료실 링크 제공",
+  "  · 위 목록에 없는 교재 → '현재 해당 교재의 교사용 자료는 등록되어 있지 않습니다'라고 정직하게 안내",
+  "  · 절대로 불확실한 내용을 스콘 고객센터로 연결하지 말 것 (스콘은 e-Book 플랫폼이므로 자료 등록 여부와 무관)",
+  "- 단계별 안내가 필요할 때는 번호(1, 2, 3...)를 사용해 순서대로 안내하세요.",
+  "- 관련 링크는 안내 흐름 안에 자연스럽게 포함하세요.",
+  "- 스콘 고객센터(https://pf.kakao.com/_nYdwxj)는 스콘 앱·e-Book 기술 문제에만 안내하세요.",
+  "- 이미지가 첨부된 경우 오류 메시지·화면 상태를 파악해 그에 맞게 답변하세요.",
+  "- 반말, 기계적 문체, 불필요한 마케팅 문구는 절대 사용하지 마세요.",
+  "- 반드시 한국어로만 답변하세요.",
+  "",
+  "───────────────────────────────",
+  "【매우 중요】 아래 예시 답변을 참고하여 동일한 형식과 내용으로 답변하세요.",
+  "예시에 있는 링크, 단계, 주의사항은 절대 임의로 변경하거나 생략하지 마세요.",
+  "───────────────────────────────"
+].join("\n");
+
+// ═══════════════════════════════════════════
+//  Few-shot 예시 대화 (AI가 정확한 형식·내용으로 답하도록 강제)
+// ═══════════════════════════════════════════
+const FEW_SHOT_EXAMPLES = [
+  {
+    role: "user",
+    parts: [{ text: "비바샘 교사용 PDF 자료는 어떻게 받나요?" }]
+  },
+  {
+    role: "model",
+    parts: [{ text: "비바샘 교사용 PDF 자료를 찾고 계시는군요, 선생님. 아래 순서대로 진행해 보세요.\n\n1. 비바샘 사이트(https://www.vivasam.com)에 로그인해 주세요.\n2. 비상교재 자료실(https://v.vivasam.com/library/main.do)에서 원하시는 교재를 검색해 주세요.\n\n※ 교사 인증이 완료된 상태에서만 이용이 가능합니다. 인증이 되어 있지 않으시다면 먼저 비바샘 사이트에서 교사 인증을 완료해 주세요.\n\n진행하시다가 어려운 점이 생기시면 언제든지 다시 문의해 주세요!" }]
+  },
+  {
+    role: "user",
+    parts: [{ text: "스콘 e-Book 신청 방법이 어떻게 되나요?" }]
+  },
+  {
+    role: "model",
+    parts: [{ text: "스콘 e-Book 신청을 원하시는군요, 선생님. 학교 선생님(비바샘)이신지, 학원 선생님(비상교재)이신지에 따라 방법이 다릅니다. 어느 쪽이신지 여쭤봐도 될까요?" }]
+  },
+  {
+    role: "user",
+    parts: [{ text: "학원 선생님이야." }]
+  },
+  {
+    role: "model",
+    parts: [{ text: "학원 선생님이시군요! 비상교재 학원선생님 플랫폼을 이용하시는 선생님께는 스콘 e-Book 신청 절차가 아래와 같습니다.\n\n1. 스콘 북카페(https://sconn.io)에 접속하여 회원가입을 해주세요. (가입 시 사용한 이메일 계정을 반드시 기억해 두세요.)\n2. 공도비 카페(https://cafe.naver.com/gongdovi)에 가입합니다.\n3. 교재 e-Book 요청 게시판(https://cafe.naver.com/f-e/cafes/30376033/menus/166)에 교재 사용 인증 또는 구매 인증 게시글을 작성해 주세요.\n4. 아래 요청서 링크를 통해 요청서를 작성해 주세요.\n   👉 요청서: https://script.google.com/macros/s/AKfycby31PXUscA0hRAQBYAKxYZXZr1mHyOPiMlz0LbO2Z6KQmUbSpqAHNEsIqA5VXl47P8Beg/exec\n5. 자료를 전달받으신 후에는 스콘 북카페 웹페이지(https://sconn.io) 또는 **스콘 for Teacher** 앱에서 열람하실 수 있습니다.\n\n※ 더 자세한 안내는 여기서 확인하세요 👉 https://naver.me/5l2ZDFfL\n\n스콘 이용 중 기술적인 문제가 생기시면 스콘 고객센터 카카오 채널(https://pf.kakao.com/_nYdwxj)로 문의해 주세요." }]
+  },
+  {
+    role: "user",
+    parts: [{ text: "학교 선생님이라면?" }]
+  },
+  {
+    role: "model",
+    parts: [{ text: "학교 선생님이시라면 비바샘을 통해 e-Book을 신청하실 수 있습니다.\n\n1. 비바샘(https://www.vivasam.com)에 로그인해 주세요.\n2. e-Book 신청 페이지(https://v.vivasam.com/library/ebookApply.do)에 접속하여 신청을 진행해 주세요.\n3. 신청 완료 후에는 스콘(https://sconn.io) 또는 **스콘 for Teacher** 앱에서 e-Book을 열람하실 수 있습니다.\n\n※ 교사 인증이 완료된 상태에서만 신청이 가능합니다.\n\n스콘 이용 중 로그인이나 인증 문제가 발생하시면 스콘 고객센터 카카오 채널(https://pf.kakao.com/_nYdwxj)로 문의해 주시면 빠르게 도움받으실 수 있습니다." }]
+  },
+  {
+    role: "user",
+    parts: [{ text: "스콘 로그인이 안 돼요." }]
+  },
+  {
+    role: "model",
+    parts: [{ text: "스콘 로그인이 안 되어서 많이 답답하셨겠습니다, 선생님. 아래 순서로 확인해 보시겠어요?\n\n1. 스콘 사이트(https://sconn.io) 또는 앱에서 **비밀번호 재설정**을 먼저 시도해 보세요.\n\n2. 로그인 시 **'교강사 인증이 필요합니다'** 메시지가 뜨는 경우:\n   → 아직 e-Book 자료가 제공되지 않은 상태일 수 있습니다.\n   → 자료가 준비되면 스콘에서 **카카오톡 메시지**로 안내가 발송됩니다.\n   → 요청일 기준 **2~3 영업일(주말·공휴일 제외)** 후에도 연락이 없으시면,\n      PC 크롬 브라우저 → 스콘 북카페(https://sconn.io) → **마이페이지 → 결제내역**에서 확인해 보세요.\n\n3. 위 방법으로도 해결이 안 되신다면 **스콘 고객센터 카카오 채널**(https://pf.kakao.com/_nYdwxj)로 문의해 주시면 더 빠르게 도움받으실 수 있습니다.\n\n빨리 해결되기를 바라겠습니다!" }]
+  },
+  {
+    role: "user",
+    parts: [{ text: "비상교재 학원 선생님 자료 PDF를 받고 싶어요." }]
+  },
+  {
+    role: "model",
+    parts: [{ text: "학원 선생님용 교재 PDF 자료를 찾고 계시는군요, 선생님. 아래 순서로 진행해 보세요.\n\n1. 비상교재 학원선생님 사이트(https://book.visang.com/main/teacher)에 로그인해 주세요.\n2. 자료실 → 교재 자료실에서 원하시는 교재를 검색합니다.\n3. 교재 페이지에서 스크롤을 내리시면 원하시는 자료를 확인하고 다운로드하실 수 있습니다.\n\n※ 학원 강사 인증이 완료된 상태에서만 다운로드가 가능합니다. 인증이 되어 있지 않으시다면 먼저 학원 강사 인증을 완료해 주세요.\n\n진행하시다가 어려운 점이 있으시면 언제든지 다시 문의해 주세요!" }]
+  },
+  {
+    role: "user",
+    parts: [{ text: "Full수록 전국연합 학력평가 고1 모의고사 수학영역 자료 있나요?" }]
+  },
+  {
+    role: "model",
+    parts: [{ text: "불편을 드려 죄송합니다, 선생님.\n\n**Full수록 전국연합 학력평가 고1 모의고사 수학영역**은 현재 비상교재 학원선생님 사이트 및 비바샘에 교사용 자료가 **등록되어 있지 않습니다.**\n\n※ Full수록 수학 시리즈 중 확률과 통계·미적분·수학Ⅰ·수학Ⅱ(15개정)는 등록되어 있으나, 고1 모의고사 수학영역은 제공되지 않습니다.\n\n현재 자료실에서 제공 중인 고등 수학 교재(등록 완료)는 아래와 같습니다.\n\n- Full수록 : 확률과 통계, 미적분, 수학Ⅰ, 수학Ⅱ (15개정)\n- 개념루트 : 공통수학1·2, 대수, 미적분Ⅰ, 확률과통계 (22개정)\n- 개념플러스유형 : 공통수학1·2, 대수, 미적분Ⅰ·Ⅱ, 확률과통계, 기하 (22개정)\n- 수학의 신 : 공통수학1·2, 대수, 미적분Ⅰ, 확률과통계 (22개정)\n- 완자 기출PICK : 공통수학1·2, 대수, 미적분Ⅰ, 확률과통계, 기하 (22개정)\n- 유형만렙 : 공통수학1·2, 대수, 미적분Ⅰ, 확률과통계, 기하 (22개정)\n- 유형만렙 LITE : 공통수학1·2 (22개정)\n- 내공의 힘 : 수학Ⅰ·Ⅱ, 확률과통계, 미적분 (15개정)\n\n위 교재 자료는 비상교재 학원선생님 사이트(https://book.visang.com/main/teacher) 자료실에서 다운로드하실 수 있습니다.\n\n원하시는 교재가 목록에 없어 불편하셨을 텐데, 양해 부탁드립니다." }]
+  },
+  {
+    role: "user",
+    parts: [{ text: "오투 중학과학 2-1 자료 있나요?" }]
+  },
+  {
+    role: "model",
+    parts: [{ text: "네, 선생님! **오투 중학과학 2-1** 교사용 자료는 자료실에 **등록되어 있습니다.**\n\n아래 방법으로 다운로드하실 수 있습니다.\n\n1. 비상교재 학원선생님 사이트(https://book.visang.com/main/teacher)에 로그인해 주세요.\n2. 자료실 → 교재 자료실에서 '오투 중학과학 2-1'을 검색해 주세요.\n3. 교재 페이지에서 교사용 자료를 확인 후 다운로드하시면 됩니다.\n\n※ 학원 강사 인증이 완료된 상태에서만 다운로드가 가능합니다.\n\n혹시 검색이 되지 않거나 다운로드가 안 되시면 언제든지 다시 문의해 주세요!" }]
+  },
+  {
+    role: "user",
+    parts: [{ text: "오투 고등 물리학 22개정 자료 있나요?" }]
+  },
+  {
+    role: "model",
+    parts: [{ text: "네, 선생님! **오투 고등 물리학 (22개정)** 교사용 자료는 자료실에 **등록되어 있습니다.**\n\n아래 방법으로 다운로드하실 수 있습니다.\n\n1. 비상교재 학원선생님 사이트(https://book.visang.com/main/teacher)에 로그인해 주세요.\n2. 자료실 → 교재 자료실에서 '오투 고등 물리학'을 검색해 주세요.\n3. 교재 페이지에서 교사용 자료를 확인 후 다운로드하시면 됩니다.\n\n※ 오투 고등 과학 22개정은 물리학·화학·생명과학·지구과학 4종 모두 등록되어 있습니다.\n※ 학원 강사 인증이 완료된 상태에서만 다운로드가 가능합니다.\n\n혹시 스콘 e-Book으로도 이용하고 싶으신 경우, 별도로 e-Book 신청이 가능합니다. 추가로 안내가 필요하시면 말씀해 주세요!" }]
+  },
+  {
+    role: "user",
+    parts: [{ text: "내공의 힘 중학 과학 1학년 1학기 자료 있나요?" }]
+  },
+  {
+    role: "model",
+    parts: [{ text: "확인해 드릴게요, 선생님.\n\n**내공의 힘 중학 과학 1학년 1학기**는 현재 자료실에 **등록되어 있지 않습니다.**\n\n내공의 힘 과학 시리즈 중 현재 자료실에 등록된 교재는 아래와 같습니다.\n- 내공의 힘 중학 과학 3-1, 3-2 (15개정)\n\n중학 과학 1·2학년 교재는 현재 제공되지 않는 점 양해 부탁드립니다.\n\n다른 중학 과학 교재가 필요하시다면 오투 중학과학 (1-1~3-2)이나 완자 기출PICK 중학과학이 등록되어 있으니 참고해 주세요." }]
+  }
+];
+
+// ═══════════════════════════════════════════
+//  대화 이력 & DB 캐시
+// ═══════════════════════════════════════════
 let conversationHistory = [];
 let selectedImageBase64 = null;
-let selectedImageType = null;
+let selectedImageType   = null;
+let selectedImageName   = null;
 
-// 1. 이미지 처리
+// DB에서 로드한 데이터 (캐시)
+let dbTextbooks = [];  // { subject, grade, brand, levels, registered, note }
+let dbLinks     = {};  // { key: url, ... }
+
+// ── Table API 절대 URL (Netlify 배포 환경에서도 동작) ──
+const API_BASE = 'https://www.genspark.ai/api/code_sandbox_light/preview/0b8c60ae-258c-4dee-a4a9-c03cd18e338b';
+
+// ═══════════════════════════════════════════
+//  DB 로드 — 교재 목록 & 링크
+// ═══════════════════════════════════════════
+async function loadDBData() {
+  try {
+    // 교재 목록 (최대 500개 한 번에)
+    const tbRes  = await fetch(`${API_BASE}/tables/textbooks?limit=500`);
+    const tbData = await tbRes.json();
+    dbTextbooks  = (tbData.data || []);
+  } catch(e) {
+    console.warn('[DB] 교재 목록 로드 실패, 시스템 프롬프트 내장 목록 사용:', e.message);
+  }
+  try {
+    // 링크 목록
+    const lkRes  = await fetch(`${API_BASE}/tables/links?limit=200`);
+    const lkData = await lkRes.json();
+    (lkData.data || []).forEach(l => { if (l.key && l.url) dbLinks[l.key] = l.url; });
+  } catch(e) {
+    console.warn('[DB] 링크 로드 실패, 기본값 사용:', e.message);
+  }
+}
+
+// DB 데이터로 동적 교재 목록 섹션 생성
+function buildDynamicCatalog() {
+  if (dbTextbooks.length === 0) return ''; // DB 없으면 시스템 프롬프트 내장 목록 사용
+
+  const groups = {};
+  for (const t of dbTextbooks) {
+    const key = `${t.subject}___${t.grade}`;
+    if (!groups[key]) groups[key] = { subject: t.subject, grade: t.grade, items: [] };
+    groups[key].items.push(t);
+  }
+
+  const registered   = [];
+  const unregistered = [];
+
+  const subjectOrder = ['수학','영어','과학','사회역사','국어','완자공부력'];
+  const gradeOrder   = ['고등','중학','초등'];
+
+  const sortedKeys = Object.keys(groups).sort((a, b) => {
+    const [sa, ga] = a.split('___');
+    const [sb, gb] = b.split('___');
+    const si = subjectOrder.indexOf(sa) - subjectOrder.indexOf(sb);
+    if (si !== 0) return si;
+    return gradeOrder.indexOf(ga) - gradeOrder.indexOf(gb);
+  });
+
+  for (const key of sortedKeys) {
+    const { subject, grade, items } = groups[key];
+    const regItems   = items.filter(i => i.registered);
+    const unregItems = items.filter(i => !i.registered);
+
+    if (regItems.length > 0) {
+      registered.push(`[${subject} / ${grade}]`);
+      for (const t of regItems) {
+        registered.push(`  - ${t.brand}${t.note ? ' (' + t.note + ')' : ''}: ${t.levels}`);
+      }
+    }
+    if (unregItems.length > 0) {
+      unregistered.push(`[${subject} / ${grade}]`);
+      for (const t of unregItems) {
+        unregistered.push(`  - ${t.brand}${t.note ? ' (' + t.note + ')' : ''}: ${t.levels}`);
+      }
+    }
+  }
+
+  return [
+    '───────────────────────────────',
+    `【교재 자료 등록 현황 (총 ${dbTextbooks.filter(t=>t.registered).length}개 등록 완료)】`,
+    '───────────────────────────────',
+    '※ 아래는 비바샘·비상교재 학원선생님 사이트에 동일하게 등록된 최신 교사용 자료 현황입니다.',
+    '※ 목록에 없는 교재는 반드시 "등록되어 있지 않다"고 안내하세요.',
+    '',
+    '▶ 등록 완료 교재',
+    ...registered,
+    '',
+    '▶ 미등록 교재 (자료 없음)',
+    ...(unregistered.length > 0 ? unregistered : ['  - 현재 미등록 교재 없음']),
+  ].join('\n');
+}
+
+// DB 링크로 동적 링크 섹션 생성
+function buildDynamicLinks() {
+  if (Object.keys(dbLinks).length === 0) return '';
+  const lines = ['───────────────────────────────', '【주요 서비스 링크 (최신)】', '───────────────────────────────'];
+  for (const [key, url] of Object.entries(dbLinks)) {
+    lines.push(`  ${key}: ${url}`);
+  }
+  return lines.join('\n');
+}
+
+// ═══════════════════════════════════════════
+//  초기화
+// ═══════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', async () => {
+  document.getElementById('initTime').textContent = now();
+  await loadDBData();   // DB에서 교재 목록·링크 로드
+  console.log(`[DB] 교재 ${dbTextbooks.length}개, 링크 ${Object.keys(dbLinks).length}개 로드 완료`);
+});
+
+function now() {
+  return new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
+}
+
+// ═══════════════════════════════════════════
+//  이미지 처리
+// ═══════════════════════════════════════════
 function handleImageSelect(e) {
   const file = e.target.files[0];
   if (!file) return;
+  if (file.size > 10 * 1024 * 1024) {
+    alert('이미지 크기는 10MB 이하로 첨부해 주세요.');
+    return;
+  }
+  selectedImageName = file.name;
+  selectedImageType = file.type;
   const reader = new FileReader();
   reader.onload = ev => {
     selectedImageBase64 = ev.target.result.split(',')[1];
-    selectedImageType = file.type;
     document.getElementById('previewThumb').src = ev.target.result;
     document.getElementById('previewName').textContent = file.name;
     document.getElementById('imagePreviewRow').classList.add('show');
   };
   reader.readAsDataURL(file);
+  e.target.value = '';
 }
 
 function removeImage() {
   selectedImageBase64 = null;
+  selectedImageType   = null;
+  selectedImageName   = null;
   document.getElementById('imagePreviewRow').classList.remove('show');
+  document.getElementById('previewThumb').src = '';
 }
 
-// 2. AI 호출 (모델 경로 수정 및 보안 에러 처리)
-async function callGemini(userText, imgB64, imgType) {
-  // DB에서 최신 교재 정보를 가져와 프롬프트에 주입
-  let dbInfo = "";
-  try {
-    const dbRes = await fetch(`${API_BASE}/tables/textbooks?limit=100`);
-    const dbData = await dbRes.json();
-    dbInfo = dbData.data.map(t => `- ${t.brand} (${t.grade} ${t.subject}): ${t.registered ? '자료있음' : '자료없음'}`).join('\n');
-  } catch(e) { console.warn("DB 로드 실패"); }
-
-  const systemPrompt = `당신은 비상교육 전문 상담봇입니다. 다음 정보를 기반으로 답하세요.\n\n[교재자료 현황]\n${dbInfo}\n\n[규칙]\n1.한국어로 정중히 답변 2.모르는 교재는 없다고 정직하게 안내 3.스콘 고객센터: https://pf.kakao.com/_nYdwxj`;
-
-  // 최신 모델 경로 (오류 수정됨)
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
-  
-  const userParts = [{ text: userText }];
-  if (imgB64) userParts.push({ inline_data: { mime_type: imgType, data: imgB64 } });
-
-  const body = {
-    contents: [
-      { role: "user", parts: [{ text: systemPrompt }] },
-      { role: "model", parts: [{ text: "확인했습니다. 선생님께 정확한 정보를 안내해 드리겠습니다." }] },
-      ...conversationHistory,
-      { role: "user", parts: userParts }
-    ]
-  };
-
-  const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-  
-  // 보안 제한(리퍼러) 오류 시
-  if (res.status === 403) return "⚠️ **보안 제한 오류**: Google Cloud Console에서 현재 도메인이 승인되지 않았습니다. 관리자 설정을 확인해 주세요.";
-  
-  if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.error?.message || "응답 오류");
+// ═══════════════════════════════════════════
+//  메시지 전송
+// ═══════════════════════════════════════════
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
   }
-
-  const data = await res.json();
-  return data.candidates[0].content.parts[0].text;
 }
 
-// 3. 메시지 관리
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+function sendQuick(text) {
+  document.getElementById('msgInput').value = text;
+  sendMessage();
+}
+
 async function sendMessage() {
-  const input = document.getElementById('msgInput');
-  const text = input.value.trim();
+  const input   = document.getElementById('msgInput');
+  const sendBtn = document.getElementById('sendBtn');
+  const text    = input.value.trim();
+
   if (!text && !selectedImageBase64) return;
 
-  const userImg = selectedImageBase64 ? `data:${selectedImageType};base64,${selectedImageBase64}` : null;
-  appendMsg('user', text, userImg);
-  
-  const currentImgB64 = selectedImageBase64;
-  const currentImgType = selectedImageType;
-  
+  // UI 잠금
   input.value = '';
-  removeImage();
-  const sendBtn = document.getElementById('sendBtn');
+  input.style.height = 'auto';
   sendBtn.disabled = true;
 
-  const tid = appendTyping();
+  // 사용자 메시지 표시
+  appendUserMsg(text, selectedImageBase64 ? `data:${selectedImageType};base64,${selectedImageBase64}` : null);
+
+  // 이미지 정보 저장 후 초기화
+  const imgB64  = selectedImageBase64;
+  const imgType = selectedImageType;
+  const imgName = selectedImageName;
+  removeImage();
+
+  // 타이핑 인디케이터
+  const typingId = appendTyping();
 
   try {
-    const answer = await callGemini(text, currentImgB64, currentImgType);
-    removeTyping(tid);
-    appendMsg('bot', answer);
-    conversationHistory.push({ role: 'user', parts: [{ text: text || "(이미지)" }] });
+    const answer = await callGemini(text, imgB64, imgType);
+    removeTyping(typingId);
+    appendBotMsg(answer);
+
+    // 대화 이력 추가
+    if (imgB64) {
+      conversationHistory.push({ role: 'user', parts: [{ text: text || '(이미지 첨부)' }] });
+    } else {
+      conversationHistory.push({ role: 'user', parts: [{ text }] });
+    }
     conversationHistory.push({ role: 'model', parts: [{ text: answer }] });
-  } catch (e) {
-    removeTyping(tid);
-    appendMsg('bot', "오류가 발생했습니다: " + e.message);
-  } finally {
-    sendBtn.disabled = false;
+    if (conversationHistory.length > 20) conversationHistory.splice(0, 2);
+
+  } catch (err) {
+    removeTyping(typingId);
+    console.error('Gemini error:', err);
+    const is429 = err && err.message && err.message.includes('429');
+    const errMsg = is429
+      ? '죄송합니다, 선생님. 일시적인 오류가 발생했습니다. 😔\n\n교강사 지원 챗봇의 무료 한도(RPM, 분당 요청)를 초과하여 1분 후 재시도가 필요합니다.\n\n잠시 후 다시 시도해 주시거나, 아래 채널로 직접 문의해 주시면 빠르게 도움드리겠습니다.\n\n📞 스콘 카카오 고객센터: https://pf.kakao.com/_nYdwxj\n🌐 비바샘: https://www.vivasam.com\n🌐 비상교재: https://book.visang.com'
+      : '죄송합니다, 선생님. 일시적인 오류가 발생했습니다. 😔\n\n잠시 후 다시 시도해 주시거나, 아래 채널로 직접 문의해 주시면 빠르게 도움드리겠습니다.\n\n📞 스콘 카카오 고객센터: https://pf.kakao.com/_nYdwxj\n🌐 비바샘: https://www.vivasam.com\n🌐 비상교재: https://book.visang.com';
+    appendBotMsg(errMsg);
   }
+
+  sendBtn.disabled = false;
+  input.focus();
 }
 
-function appendMsg(role, text, imgSrc) {
+// ═══════════════════════════════════════════
+//  Gemini API 호출
+// ═══════════════════════════════════════════
+async function callGemini(userText, imgB64, imgType) {
+  // 현재 메시지의 parts 구성
+  const userParts = [];
+  if (userText) userParts.push({ text: userText });
+  if (imgB64)   userParts.push({ inline_data: { mime_type: imgType, data: imgB64 } });
+  if (userParts.length === 0) userParts.push({ text: '(이미지가 첨부되었습니다)' });
+
+  // 대화 이력 구성:
+  // 1) 시스템 프롬프트 (역할·정보·규칙) + DB 동적 교재 목록 + DB 링크
+  // 2) Few-shot 예시 (정확한 형식·내용 강제)
+  // 3) 실제 대화 이력
+  // 4) 현재 사용자 질문
+  const dynamicCatalog = buildDynamicCatalog();
+  const dynamicLinks   = buildDynamicLinks();
+  const fullPrompt     = SYSTEM_PROMPT
+    + (dynamicCatalog ? '\n\n' + dynamicCatalog : '')
+    + (dynamicLinks   ? '\n\n' + dynamicLinks   : '');
+
+  const contents = [
+    { role: 'user',  parts: [{ text: fullPrompt }] },
+    { role: 'model', parts: [{ text: '네, 이해했습니다. 비상교육 교강사 전용 상담봇으로서 아래 예시와 같은 형식과 정확한 링크·내용으로만 답변하겠습니다.' }] },
+    ...FEW_SHOT_EXAMPLES,
+    ...conversationHistory,
+    { role: 'user', parts: userParts }
+  ];
+
+  const body = {
+    contents,
+    generationConfig: {
+      temperature: 0.4,
+      maxOutputTokens: 3000,
+      topP: 0.85
+    }
+  };
+
+  // 모델 폴백 + 429 자동 재시도
+  let lastError = null;
+
+  for (const model of GEMINI_MODELS) {
+    const url = `${GEMINI_BASE}/${model}:generateContent?key=${GEMINI_API_KEY}`;
+
+    for (let attempt = 0; attempt <= RETRY_DELAYS_MS.length; attempt++) {
+      try {
+        if (attempt > 0) {
+          const waitMs = RETRY_DELAYS_MS[attempt - 1];
+          console.log(`[Gemini] ${model} 재시도 ${attempt}회 (${waitMs/1000}초 후)...`);
+          updateTypingMsg(`잠시만 기다려 주세요... (${waitMs/1000}초 후 재시도 중)`);
+          await sleep(waitMs);
+          updateTypingMsg(null);
+        } else {
+          console.log(`[Gemini] 모델 시도: ${model}`);
+        }
+
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+
+        if (res.status === 429) {
+          const errData = await res.json().catch(() => ({}));
+          const msg = errData?.error?.message || '429 Too Many Requests';
+          console.warn(`[Gemini] ${model} 429 (시도 ${attempt+1}): ${msg.substring(0,80)}`);
+          lastError = new Error(`429: ${msg}`);
+          // 재시도 횟수가 남아 있으면 같은 모델로 재시도
+          if (attempt < RETRY_DELAYS_MS.length) continue;
+          // 재시도 소진 → 다음 모델로
+          break;
+        }
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          const msg = errData?.error?.message || res.statusText;
+          console.warn(`[Gemini] ${model} 실패 (${res.status}): ${msg.substring(0,80)}`);
+          lastError = new Error(`${model}: ${res.status} ${msg}`);
+          break; // 다른 오류는 재시도 없이 다음 모델로
+        }
+
+        const data = await res.json();
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (!text) {
+          console.warn(`[Gemini] ${model} 응답 텍스트 없음`, data);
+          lastError = new Error(`${model}: 응답 텍스트 없음`);
+          break;
+        }
+        console.log(`[Gemini] ${model} 성공 ✅`);
+        return text;
+
+      } catch (fetchErr) {
+        console.warn(`[Gemini] ${model} fetch 오류:`, fetchErr);
+        lastError = fetchErr;
+        break;
+      }
+    }
+  }
+
+  throw lastError || new Error('모든 모델 시도 실패');
+}
+
+// ═══════════════════════════════════════════
+//  DOM 헬퍼
+// ═══════════════════════════════════════════
+function appendUserMsg(text, imgSrc) {
   const container = document.getElementById('chatMessages');
   const row = document.createElement('div');
-  row.className = `msg-row ${role}`;
+  row.className = 'msg-row user';
+
+  let imgHtml = '';
+  if (imgSrc) imgHtml = `<img class="msg-image" src="${imgSrc}" alt="첨부 이미지" />`;
+
   row.innerHTML = `
-    <div class="msg-avatar ${role}-avatar"><i class="fa fa-${role==='bot'?'robot':'user'}"></i></div>
+    <div class="msg-avatar user-avatar"><i class="fa fa-user"></i></div>
     <div class="msg-content">
-      ${text ? `<div class="msg-bubble ${role}-bubble">${text.replace(/\n/g, '<br>')}</div>` : ''}
-      ${imgSrc ? `<img src="${imgSrc}" class="msg-image" />` : ''}
+      <span class="msg-name">선생님</span>
+      ${text ? `<div class="msg-bubble user-bubble">${escapeHtml(text)}</div>` : ''}
+      ${imgHtml}
+      <span class="msg-time">${now()}</span>
     </div>`;
   container.appendChild(row);
-  container.scrollTop = container.scrollHeight;
+  scrollBottom();
 }
 
-function appendTyping() {
-  const id = 't-' + Date.now();
+function appendBotMsg(text) {
   const container = document.getElementById('chatMessages');
   const row = document.createElement('div');
   row.className = 'msg-row';
-  row.id = id;
-  row.innerHTML = `<div class="msg-avatar bot-avatar"><i class="fa fa-robot"></i></div><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`;
+  row.innerHTML = `
+    <div class="msg-avatar bot-avatar"><i class="fa fa-robot"></i></div>
+    <div class="msg-content">
+      <span class="msg-name">비상교육 AI 상담봇</span>
+      <div class="msg-bubble bot-bubble">${formatBotText(text)}</div>
+      <span class="msg-time">${now()}</span>
+    </div>`;
   container.appendChild(row);
-  container.scrollTop = container.scrollHeight;
+  scrollBottom();
+}
+
+// 현재 표시 중인 타이핑 row ID (전역)
+let currentTypingId = null;
+
+function appendTyping() {
+  const container = document.getElementById('chatMessages');
+  const row = document.createElement('div');
+  row.className = 'msg-row';
+  const id = 'typing-' + Date.now();
+  row.id = id;
+  row.innerHTML = `
+    <div class="msg-avatar bot-avatar"><i class="fa fa-robot"></i></div>
+    <div class="msg-content">
+      <span class="msg-name">비상교육 AI 상담봇</span>
+      <div class="msg-bubble bot-bubble" id="${id}-bubble">
+        <div class="typing-indicator">
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+        </div>
+      </div>
+    </div>`;
+  container.appendChild(row);
+  currentTypingId = id;
+  scrollBottom();
   return id;
 }
 
-function removeTyping(id) { const el = document.getElementById(id); if(el) el.remove(); }
-function handleKey(e) { if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(); } }
-function sendQuick(text) { document.getElementById('msgInput').value = text; sendMessage(); }
+function removeTyping(id) {
+  const el = document.getElementById(id);
+  if (el) el.remove();
+  currentTypingId = null;
+}
+
+// 재시도 중 타이핑 버블 텍스트 업데이트
+function updateTypingMsg(msg) {
+  if (!currentTypingId) return;
+  const bubble = document.getElementById(currentTypingId + '-bubble');
+  if (!bubble) return;
+  if (msg) {
+    bubble.innerHTML = `<span style="font-size:13px;color:#6b7280;">${escapeHtml(msg)}</span>`;
+  } else {
+    bubble.innerHTML = `
+      <div class="typing-indicator">
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+      </div>`;
+  }
+  scrollBottom();
+}
+
+function scrollBottom() {
+  const c = document.getElementById('chatMessages');
+  c.scrollTop = c.scrollHeight;
+}
+
+// 텍스트 포맷 (마크다운 기본 처리)
+function formatBotText(text) {
+  return escapeHtml(text)
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    .replace(/`([^`]+)`/g, '<code style="background:#e8f0fe;padding:1px 5px;border-radius:4px;font-size:13px">$1</code>')
+    .replace(/(https?:\/\/[^\s<"）\)]+)/g, (match) => {
+      // 끝에 붙은 문장부호 제거 (한국어 조사 앞 마침표·쉼표 등)
+      const clean = match.replace(/[.,，。\]]+$/, '');
+      const tail  = match.slice(clean.length);
+      return `<a href="${clean}" target="_blank" style="color:#1a56db;text-decoration:underline;word-break:break-all">${clean}</a>${tail}`;
+    })
+    .replace(/\n/g, '<br>');
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
 </script>
 </body>
 </html>
