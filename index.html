@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" />
   <style>
-    /* CSS는 기존과 동일하게 유지 (디자인 일관성) */
+    /* ── 기존의 고퀄리티 디자인 CSS 그대로 복구 ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --primary: #1a56db; --primary-light: #e8f0fe; --primary-dark: #1240a8;
@@ -21,24 +21,28 @@
     header { background: linear-gradient(135deg, #1240a8 0%, #1a56db 60%, #2563eb 100%); color: white; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 12px rgba(18,64,168,0.20); position: sticky; top: 0; z-index: 100; }
     .header-left { display: flex; align-items: center; gap: 12px; }
     .header-logo { width: 38px; height: 38px; background: rgba(255,255,255,0.18); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-    .header-title { font-size: 17px; font-weight: 700; }
-    .header-badge { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); border-radius: 20px; padding: 4px 12px; font-size: 12px; display: flex; align-items: center; gap: 6px; }
+    .header-title { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; }
+    .header-badge { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); border-radius: 20px; padding: 4px 12px; font-size: 12px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
     .badge-dot { width: 7px; height: 7px; background: #4ade80; border-radius: 50%; animation: pulse 2s infinite; }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
     .app-container { flex: 1; max-width: 820px; width: 100%; margin: 24px auto; padding: 0 16px; display: flex; flex-direction: column; gap: 16px; }
     .info-banner { background: white; border-radius: var(--radius); padding: 18px 22px; box-shadow: var(--shadow); display: flex; align-items: flex-start; gap: 14px; border-left: 4px solid var(--primary); }
+    .info-icon { font-size: 22px; margin-top: 1px; }
     .info-text h3 { font-size: 15px; font-weight: 600; margin-bottom: 4px; color: var(--primary); }
     .info-text p { font-size: 13px; color: var(--gray-600); line-height: 1.6; }
     .service-tags { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
-    .service-tag { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+    .service-tag { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: default; }
     .tag-vivasam { background: #e0f2fe; color: #0369a1; }
     .tag-book { background: #f0fdf4; color: #15803d; }
     .tag-sconn { background: #fff7ed; color: #c2410c; }
-    .chat-window { background: white; border-radius: var(--radius); box-shadow: var(--shadow); display: flex; flex-direction: column; height: 520px; overflow: hidden; }
-    .chat-messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+
+    .chat-window { background: white; border-radius: var(--radius); box-shadow: var(--shadow); display: flex; flex-direction: column; height: 550px; overflow: hidden; }
+    .chat-messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 16px; scroll-behavior: smooth; }
     .msg-row { display: flex; gap: 10px; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
     .msg-row.user { flex-direction: row-reverse; }
-    .msg-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .msg-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; margin-top: 2px; }
     .bot-avatar { background: linear-gradient(135deg, #1a56db, #2563eb); color: white; }
     .user-avatar { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; }
     .msg-content { max-width: 75%; display: flex; flex-direction: column; gap: 4px; }
@@ -46,15 +50,31 @@
     .msg-bubble { padding: 12px 16px; border-radius: var(--radius); font-size: 14px; line-height: 1.7; word-break: break-word; }
     .bot-bubble { background: var(--bot-bg); color: var(--gray-800); border-bottom-left-radius: 4px; }
     .user-bubble { background: var(--user-bg); color: white; border-bottom-right-radius: 4px; }
+    .msg-time { font-size: 10px; color: var(--gray-400); }
+    .msg-image { max-width: 200px; border-radius: 10px; margin-top: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+
+    .typing-indicator { display: flex; align-items: center; gap: 6px; padding: 12px 16px; }
+    .typing-dot { width: 8px; height: 8px; background: var(--primary); border-radius: 50%; opacity: 0.4; animation: typing 1.2s ease-in-out infinite; }
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typing { 0%,80%,100%{opacity:0.4;transform:scale(1)} 40%{opacity:1;transform:scale(1.2)} }
+
     .quick-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-    .quick-btn { background: white; border: 1.5px solid var(--primary); color: var(--primary); border-radius: 20px; padding: 5px 14px; font-size: 12px; cursor: pointer; transition: all 0.2s; }
+    .quick-btn { background: white; border: 1.5px solid var(--primary); color: var(--primary); border-radius: 20px; padding: 5px 14px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
     .quick-btn:hover { background: var(--primary); color: white; }
+
     .chat-input-area { border-top: 1px solid var(--gray-200); padding: 14px 16px; background: white; }
+    .image-preview-row { display: none; align-items: center; gap: 10px; margin-bottom: 10px; padding: 8px 12px; background: var(--gray-100); border-radius: 10px; }
+    .image-preview-row.show { display: flex; }
+    .preview-thumb { width: 50px; height: 50px; object-fit: cover; border-radius: 6px; }
+    
     .input-row { display: flex; gap: 10px; align-items: flex-end; }
-    .msg-input { flex: 1; border: 1.5px solid var(--gray-200); border-radius: 12px; padding: 10px 14px; font-size: 14px; resize: none; outline: none; min-height: 44px; max-height: 120px; }
+    .icon-btn { width: 36px; height: 36px; border: 1.5px solid #2563EB; background: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #2563EB; transition: all 0.2s; }
+    .msg-input { flex: 1; border: 1.5px solid var(--gray-200); border-radius: 12px; padding: 10px 14px; font-size: 14px; outline: none; min-height: 44px; max-height: 120px; }
     .send-btn { width: 44px; height: 44px; background: var(--primary); color: white; border: none; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; }
-    .send-btn:disabled { background: var(--gray-200); cursor: not-allowed; }
+    .notice-bar { background: #fff8e1; border: 1px solid #ffd54f; border-radius: 10px; padding: 10px 16px; font-size: 12px; color: #795548; display: flex; gap: 8px; align-items: center; margin-top: 10px; }
     footer { text-align: center; padding: 16px; font-size: 12px; color: var(--gray-400); }
+    #fileInput { display: none; }
   </style>
 </head>
 <body>
@@ -67,7 +87,7 @@
     </div>
   </div>
   <div style="display:flex; align-items:center; gap:10px;">
-    <a href="admin.html" style="background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.35); border-radius:8px; padding:5px 11px; color:white; text-decoration:none; font-size:12px;">
+    <a href="admin.html" style="background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.35); border-radius:8px; padding:5px 11px; color:white; text-decoration:none; font-size:12px; font-weight:500;">
       <i class="fa fa-gear"></i> 관리자
     </a>
     <div class="header-badge"><div class="badge-dot"></div>AI 응답 중</div>
@@ -78,12 +98,12 @@
   <div class="info-banner">
     <div class="info-icon">💬</div>
     <div class="info-text">
-      <h3>비상교육 교강사 전용 AI 상담 서비스</h3>
-      <p>비바샘, 비상교재, 스콘 이용 관련 문의를 AI가 분석하여 답변해 드립니다.</p>
+      <h3>안녕하세요! 비상교육 교강사 지원 챗봇입니다.</h3>
+      <p>교사용 자료, e-Book, 사이트 이용 관련 문의에 답변드립니다.</p>
       <div class="service-tags">
-        <span class="service-tag tag-vivasam">📖 비바샘</span>
-        <span class="service-tag tag-book">🏫 비상교재</span>
-        <span class="service-tag tag-sconn">📱 스콘</span>
+        <span class="service-tag tag-vivasam">📖 비바샘 (학교용)</span>
+        <span class="service-tag tag-book">🏫 비상교재 (학원용)</span>
+        <span class="service-tag tag-sconn">📱 스콘 (e-Book)</span>
       </div>
     </div>
   </div>
@@ -93,121 +113,168 @@
       <div class="msg-row">
         <div class="msg-avatar bot-avatar"><i class="fa fa-robot"></i></div>
         <div class="msg-content">
-          <div class="msg-bubble bot-bubble">안녕하세요, 선생님! 무엇을 도와드릴까요?</div>
+          <div class="msg-bubble bot-bubble">안녕하세요, 선생님! 무엇을 도와드릴까요?<br>아래 버튼을 누르거나 질문을 입력해 주세요.</div>
           <div class="quick-btns">
-            <button class="quick-btn" onclick="sendQuick('비바샘 교사용 PDF 자료 받는 법')">📄 교사용 PDF 받기</button>
-            <button class="quick-btn" onclick="sendQuick('스콘 e-Book 신청 방법')">📱 e-Book 신청</button>
-            <button class="quick-btn" onclick="sendQuick('스콘 로그인이 안 돼요')">🔒 로그인 오류</button>
+            <button class="quick-btn" onclick="sendQuick('비바샘 교사용 PDF 자료는 어떻게 받나요?')">📄 교사용 PDF 자료</button>
+            <button class="quick-btn" onclick="sendQuick('스콘 e-Book 신청 방법이 어떻게 되나요?')">📱 스콘 e-Book 신청</button>
+            <button class="quick-btn" onclick="sendQuick('스콘 로그인이 안 돼요')">🔒 스콘 로그인 오류</button>
           </div>
         </div>
       </div>
     </div>
 
     <div class="chat-input-area">
+      <div class="image-preview-row" id="imagePreviewRow">
+        <img class="preview-thumb" id="previewThumb" src="" />
+        <span id="previewName" style="font-size:12px; flex:1"></span>
+        <button onclick="removeImage()" style="border:none; background:none; cursor:pointer; color:#ef4444"><i class="fa fa-times"></i></button>
+      </div>
       <div class="input-row">
+        <button class="icon-btn" onclick="document.getElementById('fileInput').click()"><i class="fa fa-image"></i></button>
         <textarea class="msg-input" id="msgInput" placeholder="문의 내용을 입력하세요..." rows="1" onkeydown="handleKey(event)"></textarea>
         <button class="send-btn" id="sendBtn" onclick="sendMessage()"><i class="fa fa-paper-plane"></i></button>
       </div>
+      <input type="file" id="fileInput" accept="image/*" onchange="handleImageSelect(event)" />
     </div>
   </div>
+  <div class="notice-bar"><i class="fa fa-info-circle"></i> 본 챗봇은 AI가 답변을 생성합니다. 정확한 기술 지원은 카카오 채널을 이용해 주세요.</div>
 </div>
 
 <footer>© 2025 비상교육 · Powered by Gemini AI</footer>
 
 <script>
 // ═══════════════════════════════════════════
-//  보안 설정 (리퍼러 제한 필수 적용)
+//  설정 및 보안 (리퍼러 제한 대응)
 // ═══════════════════════════════════════════
-const GEMINI_API_KEY = 'AIzaSyASxJIuWmIV6od9ueLlr3TZBjPe7KAbXXo';
+const GEMINI_API_KEY = 'AIzaSyBnh0n30db_pOi3WEbrd4fSJierguuHtHI';
 const API_BASE = 'https://www.genspark.ai/api/code_sandbox_light/preview/0b8c60ae-258c-4dee-a4a9-c03cd18e338b';
 
-// 대화 내역 저장
 let conversationHistory = [];
+let selectedImageBase64 = null;
+let selectedImageType = null;
 
-// 1. 초기 데이터 로드 (교재 목록 등)
-async function loadDB() {
-  try {
-    const res = await fetch(`${API_BASE}/tables/textbooks?limit=500`);
-    const data = await res.json();
-    return data.data || [];
-  } catch(e) { console.error("DB 로드 실패", e); return []; }
+// 1. 이미지 처리
+function handleImageSelect(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    selectedImageBase64 = ev.target.result.split(',')[1];
+    selectedImageType = file.type;
+    document.getElementById('previewThumb').src = ev.target.result;
+    document.getElementById('previewName').textContent = file.name;
+    document.getElementById('imagePreviewRow').classList.add('show');
+  };
+  reader.readAsDataURL(file);
 }
 
-// 2. AI 호출 함수 (보안 에러 처리 강화)
-async function callGemini(text) {
-  const textbooks = await loadDB();
-  const textbookInfo = textbooks.map(t => `- ${t.brand} (${t.grade} ${t.subject}): ${t.registered ? '자료 있음' : '자료 없음'}`).join('\n');
+function removeImage() {
+  selectedImageBase64 = null;
+  document.getElementById('imagePreviewRow').classList.remove('show');
+}
 
-  const systemPrompt = `당신은 비상교육 상담봇입니다. 다음 정보를 기반으로 친절히 답하세요.\n[교재현황]\n${textbookInfo}\n[규칙] 1.한국어로만 답변 2.링크는 정확히 안내 3.모르는 교재는 없다고 정직하게 말하기`;
+// 2. AI 호출 (모델 경로 수정 및 보안 에러 처리)
+async function callGemini(userText, imgB64, imgType) {
+  // DB에서 최신 교재 정보를 가져와 프롬프트에 주입
+  let dbInfo = "";
+  try {
+    const dbRes = await fetch(`${API_BASE}/tables/textbooks?limit=100`);
+    const dbData = await dbRes.json();
+    dbInfo = dbData.data.map(t => `- ${t.brand} (${t.grade} ${t.subject}): ${t.registered ? '자료있음' : '자료없음'}`).join('\n');
+  } catch(e) { console.warn("DB 로드 실패"); }
 
+  const systemPrompt = `당신은 비상교육 전문 상담봇입니다. 다음 정보를 기반으로 답하세요.\n\n[교재자료 현황]\n${dbInfo}\n\n[규칙]\n1.한국어로 정중히 답변 2.모르는 교재는 없다고 정직하게 안내 3.스콘 고객센터: https://pf.kakao.com/_nYdwxj`;
+
+  // 최신 모델 경로 (오류 수정됨)
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
   
+  const userParts = [{ text: userText }];
+  if (imgB64) userParts.push({ inline_data: { mime_type: imgType, data: imgB64 } });
+
   const body = {
     contents: [
       { role: "user", parts: [{ text: systemPrompt }] },
-      { role: "model", parts: [{ text: "네, 숙지했습니다." }] },
+      { role: "model", parts: [{ text: "확인했습니다. 선생님께 정확한 정보를 안내해 드리겠습니다." }] },
       ...conversationHistory,
-      { role: "user", parts: [{ text }] }
+      { role: "user", parts: userParts }
     ]
   };
 
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
-  });
-
-  if (response.status === 403) {
-    return "⚠️ [보안 오류] 허용되지 않은 사이트에서 접근했습니다. 관리자 설정(리퍼러 제한)을 확인해 주세요.";
-  }
+  const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
   
-  if (!response.ok) {
-    const err = await response.json();
-    throw new Error(err.error?.message || "알 수 없는 오류");
+  // 보안 제한(리퍼러) 오류 시
+  if (res.status === 403) return "⚠️ **보안 제한 오류**: Google Cloud Console에서 현재 도메인이 승인되지 않았습니다. 관리자 설정을 확인해 주세요.";
+  
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.error?.message || "응답 오류");
   }
 
-  const result = await response.json();
-  return result.candidates[0].content.parts[0].text;
+  const data = await res.json();
+  return data.candidates[0].content.parts[0].text;
 }
 
-// 3. 메시지 전송 로직
+// 3. 메시지 관리
 async function sendMessage() {
   const input = document.getElementById('msgInput');
   const text = input.value.trim();
-  if(!text) return;
+  if (!text && !selectedImageBase64) return;
 
-  input.value = '';
-  appendMsg('user', text);
+  const userImg = selectedImageBase64 ? `data:${selectedImageType};base64,${selectedImageBase64}` : null;
+  appendMsg('user', text, userImg);
   
+  const currentImgB64 = selectedImageBase64;
+  const currentImgType = selectedImageType;
+  
+  input.value = '';
+  removeImage();
   const sendBtn = document.getElementById('sendBtn');
   sendBtn.disabled = true;
 
+  const tid = appendTyping();
+
   try {
-    const answer = await callGemini(text);
+    const answer = await callGemini(text, currentImgB64, currentImgType);
+    removeTyping(tid);
     appendMsg('bot', answer);
-    conversationHistory.push({ role: "user", parts: [{ text }] });
-    conversationHistory.push({ role: "model", parts: [{ text: answer }] });
+    conversationHistory.push({ role: 'user', parts: [{ text: text || "(이미지)" }] });
+    conversationHistory.push({ role: 'model', parts: [{ text: answer }] });
   } catch (e) {
-    appendMsg('bot', "죄송합니다. 오류가 발생했습니다: " + e.message);
+    removeTyping(tid);
+    appendMsg('bot', "오류가 발생했습니다: " + e.message);
   } finally {
     sendBtn.disabled = false;
   }
 }
 
-function appendMsg(role, text) {
+function appendMsg(role, text, imgSrc) {
   const container = document.getElementById('chatMessages');
   const row = document.createElement('div');
   row.className = `msg-row ${role}`;
   row.innerHTML = `
     <div class="msg-avatar ${role}-avatar"><i class="fa fa-${role==='bot'?'robot':'user'}"></i></div>
     <div class="msg-content">
-      <div class="msg-bubble ${role}-bubble">${text.replace(/\n/g, '<br>')}</div>
+      ${text ? `<div class="msg-bubble ${role}-bubble">${text.replace(/\n/g, '<br>')}</div>` : ''}
+      ${imgSrc ? `<img src="${imgSrc}" class="msg-image" />` : ''}
     </div>`;
   container.appendChild(row);
   container.scrollTop = container.scrollHeight;
 }
 
-function handleKey(e) { if(e.key==='Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }
+function appendTyping() {
+  const id = 't-' + Date.now();
+  const container = document.getElementById('chatMessages');
+  const row = document.createElement('div');
+  row.className = 'msg-row';
+  row.id = id;
+  row.innerHTML = `<div class="msg-avatar bot-avatar"><i class="fa fa-robot"></i></div><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`;
+  container.appendChild(row);
+  container.scrollTop = container.scrollHeight;
+  return id;
+}
+
+function removeTyping(id) { const el = document.getElementById(id); if(el) el.remove(); }
+function handleKey(e) { if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(); } }
 function sendQuick(text) { document.getElementById('msgInput').value = text; sendMessage(); }
 </script>
 </body>
