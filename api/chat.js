@@ -18,11 +18,11 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'GEMINI_API_KEY 환경변수가 설정되지 않았습니다.', code: 'MISSING_API_KEY' });
   }
 
-  // ── 신규 API 키 호환 모델 (2025년 기준 신규 사용자용) ──
+  // ── 이 API 키로 실제 사용 가능한 모델 (ListModels로 확인된 목록) ──
   const GEMINI_MODELS = [
-    'gemini-2.5-flash-preview-04-17',
-    'gemini-2.5-pro-preview-03-25',
-    'gemini-2.0-flash-lite-001',
+    'gemini-2.5-flash',
+    'gemini-2.0-flash',
+    'gemini-2.0-flash-lite',
   ];
   const GEMINI_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
 
