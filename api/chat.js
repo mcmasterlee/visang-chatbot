@@ -38,9 +38,9 @@ export default async function handler(req, res) {
   const GEMINI_MODELS = [
     'gemini-2.0-flash',
     'gemini-2.0-flash-lite',
-    'gemini-1.5-flash-latest'
+    'gemini-1.5-flash'
   ];
-  const GEMINI_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
+  const GEMINI_BASE = 'https://generativelanguage.googleapis.com/v1/models';
 
   // Vercel Free: 10초 제한 → 재시도 없이 바로 다음 모델로 폴백
   // Vercel Pro: 60초 제한 → 짧은 재시도 허용
