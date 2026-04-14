@@ -12,9 +12,9 @@ export default async function handler(req, res) {
   const results = [];
 
   const MODELS = [
-    { name: 'gemini-2.0-flash',      version: 'v1beta' },
-    { name: 'gemini-2.0-flash-lite', version: 'v1beta' },
-    { name: 'gemini-1.5-flash',      version: 'v1'     },
+    { name: 'gemini-2.5-flash-preview-04-17', version: 'v1beta' },
+    { name: 'gemini-2.5-pro-preview-03-25',   version: 'v1beta' },
+    { name: 'gemini-2.0-flash-lite-001',      version: 'v1beta' },
   ];
 
   const testBody = {
