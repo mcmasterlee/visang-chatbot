@@ -1,49 +1,34 @@
-// 진단용 엔드포인트 — /api/test
-// Gemini API 키와 모델이 실제로 동작하는지 확인
+// 진단용 — 이 API 키로 사용 가능한 모델 목록 직접 조회
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
 
   const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
   if (!GEMINI_API_KEY) {
-    return res.status(200).json({ error: 'GEMINI_API_KEY 환경변수 없음', keySet: false });
+    return res.status(200).json({ error: 'GEMINI_API_KEY 없음' });
   }
 
   const keyPreview = GEMINI_API_KEY.substring(0, 8) + '...' + GEMINI_API_KEY.slice(-4);
-  const results = [];
 
-  const MODELS = [
-    { name: 'gemini-2.5-flash-preview-04-17', version: 'v1beta' },
-    { name: 'gemini-2.5-pro-preview-03-25',   version: 'v1beta' },
-    { name: 'gemini-2.0-flash-lite-001',      version: 'v1beta' },
-  ];
+  try {
+    // 이 키로 사용 가능한 모든 모델 목록 조회
+    const r = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models?key=${GEMINI_API_KEY}`,
+      { signal: AbortSignal.timeout(10000) }
+    );
+    const data = await r.json();
 
-  const testBody = {
-    contents: [{ role: 'user', parts: [{ text: '안녕' }] }],
-    generationConfig: { maxOutputTokens: 10 }
-  };
-
-  for (const { name, version } of MODELS) {
-    const url = `https://generativelanguage.googleapis.com/${version}/models/${name}:generateContent?key=${GEMINI_API_KEY}`;
-    try {
-      const r = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(testBody),
-        signal: AbortSignal.timeout(8000)
-      });
-      const data = await r.json();
-      results.push({
-        model: name,
-        version,
-        status: r.status,
-        ok: r.ok,
-        text: data?.candidates?.[0]?.content?.parts?.[0]?.text || null,
-        error: data?.error?.message || null
-      });
-    } catch (e) {
-      results.push({ model: name, version, status: 'fetch_error', error: e.message });
+    if (!r.ok) {
+      return res.status(200).json({ keyPreview, error: data?.error?.message });
     }
-  }
 
-  return res.status(200).json({ keyPreview, keySet: true, results });
+    // generateContent 가능한 모델만 필터링
+    const models = (data.models || [])
+      .filter(m => (m.supportedGenerationMethods || []).includes('generateContent'))
+      .map(m => m.name.replace('models/', ''));
+
+    return res.status(200).json({ keyPreview, availableModels: models });
+
+  } catch (e) {
+    return res.status(200).json({ keyPreview, error: e.message });
+  }
 }
