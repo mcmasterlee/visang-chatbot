@@ -1,12 +1,7 @@
 // ═══════════════════════════════════════════
 //  Vercel 서버리스 함수 — DB 범용 프록시
 //  GET/POST/PUT/PATCH/DELETE 모두 지원
-//
-//  호출 방식:
-//  /api/db/tables/textbooks          → GET 목록
-//  /api/db/tables/textbooks?limit=50 → GET 목록 (페이지)
-//  /api/db/tables/textbooks/{id}     → GET/PUT/DELETE 단건
-//  /api/db/tables/links              → GET/POST
+//  GENSPARK_COOKIE 환경변수로 인증 처리
 // ═══════════════════════════════════════════
 
 export default async function handler(req, res) {
@@ -17,19 +12,24 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   const GENSPARK_BASE = 'https://www.genspark.ai/api/code_sandbox_light/preview/0b8c60ae-258c-4dee-a4a9-c03cd18e338b';
+  const GENSPARK_COOKIE = process.env.GENSPARK_COOKIE || '';
 
-  // req.url 에서 /api/db 이후 경로 추출
-  // 예: /api/db/tables/textbooks?limit=500  →  /tables/textbooks?limit=500
+  // /api/db 이후 경로 추출
+  // 예: /api/db/tables/textbooks?limit=500 → /tables/textbooks?limit=500
   const rawUrl   = req.url || '';
-  const pathPart = rawUrl.replace(/^\/api\/db/, ''); // '/tables/textbooks?limit=500'
-
+  const pathPart = rawUrl.replace(/^\/api\/db/, '');
   const upstreamUrl = `${GENSPARK_BASE}${pathPart}`;
+
   console.log(`[db.js] ${req.method} ${upstreamUrl}`);
 
   try {
     const fetchOptions = {
       method: req.method,
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        ...(GENSPARK_COOKIE ? { 'Cookie': GENSPARK_COOKIE } : {})
+      },
       signal: AbortSignal.timeout(15000)
     };
 
