@@ -35,12 +35,16 @@ export default async function handler(req, res) {
   // ── 모델 & 타이밍 설정 ──
   // Vercel Free 플랜: 함수 실행 최대 10초
   // → 재시도 대기를 짧게 하고, 빠른 모델 우선 사용
+  // 모델별 API 버전이 다름:
+  // gemini-2.0-* → v1beta 필수
+  // gemini-1.5-* → v1 사용
   const GEMINI_MODELS = [
-    'gemini-2.0-flash',
-    'gemini-2.0-flash-lite',
-    'gemini-1.5-flash'
+    { name: 'gemini-2.0-flash',      version: 'v1beta' },
+    { name: 'gemini-2.0-flash-lite', version: 'v1beta' },
+    { name: 'gemini-1.5-flash',      version: 'v1'     },
+    { name: 'gemini-1.5-flash-8b',   version: 'v1'     },
   ];
-  const GEMINI_BASE = 'https://generativelanguage.googleapis.com/v1/models';
+  const GEMINI_HOST = 'https://generativelanguage.googleapis.com';
 
   // Vercel Free: 10초 제한 → 재시도 없이 바로 다음 모델로 폴백
   // Vercel Pro: 60초 제한 → 짧은 재시도 허용
@@ -70,9 +74,9 @@ export default async function handler(req, res) {
     let lastStatus = null;
 
     // ── 모델 폴백 루프 ──
-    for (const model of GEMINI_MODELS) {
-      const url = `${GEMINI_BASE}/${model}:generateContent?key=${GEMINI_API_KEY}`;
-      console.log(`[Gemini] 모델 시도: ${model}`);
+    for (const { name: model, version } of GEMINI_MODELS) {
+      const url = `${GEMINI_HOST}/${version}/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
+      console.log(`[Gemini] 모델 시도: ${model} (${version})`);
 
       for (let attempt = 0; attempt <= MAX_RETRIES_PER_MODEL; attempt++) {
         if (attempt > 0 && RETRY_WAIT_MS > 0) {
