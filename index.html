@@ -516,6 +516,12 @@ const SYSTEM_PROMPT = [
   "───────────────────────────────",
   "【답변 규칙】",
   "───────────────────────────────",
+  "- 【매우 중요】 이 챗봇은 CS 담당자 한 명이 여러 선생님의 문의를 받아 답변을 작성하는 도구입니다.",
+  "  매 질문은 완전히 새로운 선생님의 첫 번째 문의입니다.",
+  "  절대로 아래와 같은 표현을 사용하지 마세요:",
+  "  ✗ '또 문의해 주셨네요', '다시 오셨군요', '저번에 안내드린 것처럼'",
+  "  ✗ '이전에 말씀드린 대로', '앞서 안내해 드렸듯이', '아까 설명드린'",
+  "  항상 처음 받는 문의처럼 완전하고 독립적인 답변을 제공하세요.",
   "- 항상 정중하고 따뜻한 말투로, 선생님의 불편함에 공감하는 문장으로 시작하세요.",
   "  예: '많이 불편하셨겠습니다, 선생님.', '답답하셨을 텐데 안내해 드릴게요.'",
   "  ※ '안녕하세요' 같은 단순 인사로 시작하지 마세요.",
@@ -851,14 +857,16 @@ async function sendMessage() {
     removeTyping(typingId);
     appendBotMsg(answer);
 
-    // 대화 이력 추가
+    // 대화 이력: 같은 선생님의 연속 문의(맥락 유지)는 최대 2턴(4개)만 유지
+    // 새 문의가 들어오면 이전 맥락이 영향을 주지 않도록 오래된 이력 제거
     if (imgB64) {
       conversationHistory.push({ role: 'user', parts: [{ text: text || '(이미지 첨부)' }] });
     } else {
       conversationHistory.push({ role: 'user', parts: [{ text }] });
     }
     conversationHistory.push({ role: 'model', parts: [{ text: answer }] });
-    if (conversationHistory.length > 20) conversationHistory.splice(0, 2);
+    // 최대 2턴(질문+답변 2쌍 = 4개)만 유지 → 이전 문의가 새 문의에 영향 최소화
+    if (conversationHistory.length > 4) conversationHistory.splice(0, conversationHistory.length - 4);
 
   } catch (err) {
     removeTyping(typingId);
