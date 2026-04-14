@@ -1,41 +1,61 @@
 // ═══════════════════════════════════════════
-//  Vercel 서버리스 함수 — DB 프록시
-//  /api/db?table=textbooks  또는  /api/db?table=links
-//  Genspark DB → Vercel → 브라우저 (CORS 우회)
+//  Vercel 서버리스 함수 — DB 범용 프록시
+//  GET/POST/PUT/PATCH/DELETE 모두 지원
+//
+//  호출 방식:
+//  /api/db/tables/textbooks          → GET 목록
+//  /api/db/tables/textbooks?limit=50 → GET 목록 (페이지)
+//  /api/db/tables/textbooks/{id}     → GET/PUT/DELETE 단건
+//  /api/db/tables/links              → GET/POST
 // ═══════════════════════════════════════════
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') return res.status(200).end();
-  if (req.method !== 'GET') return res.status(405).json({ error: 'Method Not Allowed' });
-
-  const table  = req.query.table;
-  const limit  = req.query.limit || 500;
-
-  if (!table) return res.status(400).json({ error: 'table 파라미터가 필요합니다.' });
 
   const GENSPARK_BASE = 'https://www.genspark.ai/api/code_sandbox_light/preview/0b8c60ae-258c-4dee-a4a9-c03cd18e338b';
 
-  try {
-    const upstream = await fetch(`${GENSPARK_BASE}/tables/${table}?limit=${limit}`, {
-      headers: { 'Accept': 'application/json' }
-    });
+  // req.url 에서 /api/db 이후 경로 추출
+  // 예: /api/db/tables/textbooks?limit=500  →  /tables/textbooks?limit=500
+  const rawUrl   = req.url || '';
+  const pathPart = rawUrl.replace(/^\/api\/db/, ''); // '/tables/textbooks?limit=500'
 
-    if (!upstream.ok) {
-      console.warn(`[db.js] upstream 오류 (${upstream.status}):`, table);
-      return res.status(upstream.status).json({ error: `DB 오류: ${upstream.status}`, data: [] });
+  const upstreamUrl = `${GENSPARK_BASE}${pathPart}`;
+  console.log(`[db.js] ${req.method} ${upstreamUrl}`);
+
+  try {
+    const fetchOptions = {
+      method: req.method,
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      signal: AbortSignal.timeout(15000)
+    };
+
+    if (['POST', 'PUT', 'PATCH'].includes(req.method) && req.body) {
+      fetchOptions.body = JSON.stringify(req.body);
     }
 
-    const data = await upstream.json();
-    // 캐시: 5분
-    res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=60');
-    return res.status(200).json(data);
+    const upstream = await fetch(upstreamUrl, fetchOptions);
+
+    // DELETE → 204 No Content
+    if (req.method === 'DELETE') {
+      if (upstream.ok) return res.status(204).end();
+      const err = await upstream.json().catch(() => ({}));
+      return res.status(upstream.status).json({ error: err?.error || '삭제 실패' });
+    }
+
+    const data = await upstream.json().catch(() => ({}));
+
+    if (req.method === 'GET') {
+      res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=30');
+    }
+
+    return res.status(upstream.status).json(data);
 
   } catch (err) {
-    console.error('[db.js] fetch 오류:', err.message);
-    return res.status(500).json({ error: err.message, data: [] });
+    console.error('[db.js] 오류:', err.message);
+    return res.status(500).json({ error: err.message });
   }
 }
