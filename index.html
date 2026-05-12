@@ -707,20 +707,24 @@ const DB_PROXY = '/api/db';
 // ═══════════════════════════════════════════
 async function loadDBData() {
   try {
-    // 교재 목록 (최대 500개 한 번에)
-    const tbRes  = await fetch(`${DB_PROXY}?table=textbooks&limit=500`);
+    // 교재 목록 (최대 500개 한 번에) — 경로 방식으로 호출
+    const tbRes  = await fetch(`${DB_PROXY}/tables/textbooks?limit=500`);
+    if (!tbRes.ok) throw new Error(`HTTP ${tbRes.status}`);
     const tbData = await tbRes.json();
     dbTextbooks  = (tbData.data || []);
+    console.log(`[DB] 교재 ${dbTextbooks.length}개 로드 완료`);
   } catch(e) {
-    console.warn('[DB] 교재 목록 로드 실패, 시스템 프롬프트 내장 목록 사용:', e.message);
+    console.warn('[DB] 교재 목록 로드 실패:', e.message);
   }
   try {
-    // 링크 목록
-    const lkRes  = await fetch(`${DB_PROXY}?table=links&limit=200`);
+    // 링크 목록 — 경로 방식으로 호출
+    const lkRes  = await fetch(`${DB_PROXY}/tables/links?limit=200`);
+    if (!lkRes.ok) throw new Error(`HTTP ${lkRes.status}`);
     const lkData = await lkRes.json();
     (lkData.data || []).forEach(l => { if (l.key && l.url) dbLinks[l.key] = l.url; });
+    console.log(`[DB] 링크 ${Object.keys(dbLinks).length}개 로드 완료`);
   } catch(e) {
-    console.warn('[DB] 링크 로드 실패, 기본값 사용:', e.message);
+    console.warn('[DB] 링크 로드 실패:', e.message);
   }
 }
 
